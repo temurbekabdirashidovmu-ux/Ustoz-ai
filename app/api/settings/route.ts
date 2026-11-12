@@ -1,0 +1,3 @@
+import {owner,sameOrigin,saveKey,configured,json} from '../../../lib/service';
+export async function GET(req:Request){if(!owner(req))return json({error:'Faqat sayt egasi sozlay oladi.'},403);return json({configured:await configured()});}
+export async function POST(req:Request){if(!owner(req)||!sameOrigin(req))return json({error:'Faqat sayt egasiga ruxsat berilgan.'},403);try{const body=await req.text();if(body.length>4096)return json({error:'Qiymat juda uzun.'},400);const {key}=JSON.parse(body);if(typeof key!=='string'||key.trim().length<20||key.length>2048||/\s/.test(key.trim()))return json({error:'API kalitini toliq nusxalang.'},400);await saveKey(key.trim());return json({ok:true});}catch{return json({error:'Saqlashda xato. Keyinroq qayta urinib koring.'},500);}}

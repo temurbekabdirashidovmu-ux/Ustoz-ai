@@ -1,0 +1,2 @@
+import siteHTML from '../lib/site-html';import {identity} from '../lib/admin-auth';import {student,touch} from '../lib/students';import {publicHome} from '../lib/public-home';
+export async function GET(req:Request){const u=identity(req);if(!u.userId||!u.email)return publicHome();if(!await student(req))return new Response(null,{status:303,headers:{Location:'/profil','Cache-Control':'no-store'}});await touch(req);return new Response(siteHTML,{headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});}

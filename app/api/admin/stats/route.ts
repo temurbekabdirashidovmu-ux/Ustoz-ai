@@ -1,0 +1,2 @@
+import {ensureCuratedBooks,db,isAdmin,json} from '../../../../lib/library';
+export async function GET(req:Request){if(!await isAdmin(req))return json({error:'Admin hisobiga kiring.'},403);await ensureCuratedBooks();const result=await db().prepare("SELECT COUNT(*) as total,COALESCE(SUM(status='published'),0) as published,COALESCE(SUM(status='draft'),0) as draft,COALESCE(SUM(status='archived'),0) as archived,COALESCE(SUM(size),0) as bytes FROM books").first();return json(result);}

@@ -1,0 +1,1 @@
+export function GET() { return new Response("google-site-verification: google8d5bc886bca6f02f.html", { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=300" } }); }

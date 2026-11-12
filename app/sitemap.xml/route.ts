@@ -1,0 +1,3 @@
+import {db,ensureCuratedBooks} from '../../lib/library';
+import {SITE_ORIGIN} from '../../lib/public-home';
+export async function GET(){await ensureCuratedBooks();const books=await db().prepare("SELECT id FROM books WHERE status='published' ORDER BY id").all<{id:string}>();const paths=['/','/kutubxona','/oqish-royxati','/loyiha','/sinov','/ornatish',...books.results.map(b=>'/kitob/'+encodeURIComponent(b.id))];return new Response('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+paths.map(path=>'<url><loc>'+SITE_ORIGIN+path+'</loc></url>').join('')+'</urlset>',{headers:{'Content-Type':'application/xml; charset=utf-8'}})}

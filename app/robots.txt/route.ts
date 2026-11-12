@@ -1,0 +1,1 @@
+export async function GET(){return new Response('User-agent: *\nAllow: /\nDisallow: /sozlash\nDisallow: /admin\nDisallow: /api/\nDisallow: /profil\nDisallow: /kirish\nDisallow: /bellashuv\nSitemap: https://ziyomakon-bilim-ai.archedcycle2.chatgpt.site/sitemap.xml\n',{headers:{'Content-Type':'text/plain; charset=utf-8'}})}
