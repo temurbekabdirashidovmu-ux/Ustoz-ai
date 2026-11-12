@@ -1,0 +1,1234 @@
+[
+  {
+    "title": "Malika Husnobod” dostoni",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Ravshan” dostoni",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Yunus va Misqol pari” dostoni",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Xalq bo‘l, elim” (to‘plam)",
+    "author": "Muhammad Yusuf",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Bolajon, bolajonim” (she’rlar)",
+    "author": "Po‘lat Mo‘min",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Quyosh bola, oy bola” (she’rlar)",
+    "author": "Qambar Ota",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Yashasin quyoshli kun” (she’rlar)",
+    "author": "Rustam Nazar",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Hirotga sayohat (she’rlar)",
+    "author": "Yo‘ldosh Sulaymon",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Saylanma” (qissalar)",
+    "author": "Mirkarim Osim",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Mo‘ttivoymisan, Mittivoymisan” (qissa)",
+    "author": "Anvar Obidjon",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Qaydalardasan, bolaligim” (hikoya va qissalar)",
+    "author": "Xudoyberdi To‘xtaboyev",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Akramning sarguzashtlari” (qissalar va hikoyalar)",
+    "author": "Pirimqul Qodirov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Ming bir kitob",
+    "author": "Sharifjon Ahmad",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "O‘tkirjonning o‘nta o‘rdak ukasi (qissa)",
+    "author": "Qobiljon Shermatov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Nabiralarimga maktublar…",
+    "author": "Erkin Malik",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Changalzor iti” qissa",
+    "author": "Normurod Norqobilov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Qaysar bolaning hayoti” (qissalar)",
+    "author": "Mirzakalon Ismoiliy",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Shum bola” qissa",
+    "author": "G‘afur G‘ulom",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Shunaqa bolani qidirib yuribman” (hikoya)",
+    "author": "Latif Mahmudov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Bolalik xotiralarim",
+    "author": "Oybek",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "O‘tmishdan ertaklar",
+    "author": "Abdulla Qahhor",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Olamlar kurashi” (ertak-qissa)",
+    "author": "Baxtiyor Abdug‘afur",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Galaktikada bir kun (3-kitob)",
+    "author": "Sa’dulla Quronov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Dunyoning ishlari",
+    "author": "O‘tkir Hoshimov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Bir qultum buloq suvi” (hikoyalar)",
+    "author": "Farhod Musajonov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Qorxat",
+    "author": "Nosir Fozilov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Uch baqaloq",
+    "author": "Yuriy Olesha",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Oq so‘yloq” (qissa)",
+    "author": "Jek London",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Nilsning yovvoyi g‘ozlar bilan ajoyib sayohati",
+    "author": "Selma Lagerlyof",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Hellados",
+    "author": "Nodar Dumbadze",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Imperatorning tug‘ilishi. Boburning bolaligi.",
+    "author": "Durbek Qo‘ldoshev",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Geklberri Finning boshidan kechirganlari” (roman)",
+    "author": "Mark Tven",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Buyuk Akbar va Roja Birbol (hikoyalar)",
+    "author": "Hind xalq og’zaki ijodi",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Tolzordan esgan shamol” (qissa)",
+    "author": "Kennet Grehem",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Yovvoyi yo‘rg‘a” (hikoyalar)",
+    "author": "E.Seton-Tompson",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Bolaligim” (qissa)",
+    "author": "Chingiz Aytmatov",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Dunyo bo‘ylab sakson kun” (roman)",
+    "author": "Jyul Vern",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Qanday xatolar bo‘ladi” (ertaklar)",
+    "author": "Janni Rodari",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Mio, bolajonim Mio",
+    "author": "Astrid Lindgren",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": true
+  },
+  {
+    "title": "Britannika ensiklopediyasi",
+    "author": "Kristofer Lloyd",
+    "group": "yosh",
+    "age": "10–14",
+    "mutolaa": false
+  },
+  {
+    "title": "Go‘ro‘g‘lining tug‘ilishi” dostoni",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Shirin bilan Shakar” dostoni",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Kalila va Dimna",
+    "author": "Hind xalq eposi",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Qobusnoma",
+    "author": "Kaykovus",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Boburnoma",
+    "author": "Zahiriddin Muhammad Bobur",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Lison ut-tayr",
+    "author": "Alisher Navoiy",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Mezon uz-zamon",
+    "author": "Is’hoqxon Ibrat",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "G‘afur G‘ulom",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "Oybek",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Umr manzillari” (she’rlar)",
+    "author": "Abdulla Oripov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Zamon qasri” (she’rlar)",
+    "author": "Sirojiddin Sayyid",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Qoraqalpoqnoma” (roman-esse)",
+    "author": "To‘lepbergen Qaipbergenov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Muqaddas” (qissa)",
+    "author": "Odil Yoqubov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Amir Temur siymosi” (ilmiy badia)",
+    "author": "Pirimqul Qodirov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Mungli ko‘zlar” (roman)",
+    "author": "Xudoyberdi To‘xtaboyev",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Qorako‘z Majnun” (hikoyalar)",
+    "author": "Said Ahmad",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Spitamen” (roman)",
+    "author": "Maqsud Qoriyev",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Yoz yomg‘iri” (qissa)",
+    "author": "O‘lmas Umarbekov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Yulduzlar mangu yonadi” (qissa)",
+    "author": "Tog‘ay Murod",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Daftar hoshiyasidagi bitiklar",
+    "author": "O‘tkir Hoshimov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Odamlardan tinglab hikoya” (to‘plam)",
+    "author": "Xayriddin Sulton",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Ozodlik” (hikoyalar)",
+    "author": "Shukur Xolmirzayev",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Og‘abiy” (roman)",
+    "author": "Kengisboy Karimov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Panoh” (qissa)",
+    "author": "Xurshid Do‘stmuhammad",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Qoyalar ham yig‘laydi” (qissa)",
+    "author": "Normurod Norqobilov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Boboso‘z izidan",
+    "author": "Eshqobil Shukur",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Mezon” (qissa)",
+    "author": "Shomirza Turdimov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Jaziramadagi odamlar” (roman)",
+    "author": "Luqmon Bo‘rixon",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Sho‘rodan qolgan odamlar” (qissa)",
+    "author": "Shoyim Bo‘tayev",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Gudbay, Amerika",
+    "author": "Abduqayum Yo‘ldoshev",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Ma’suma” (roman)",
+    "author": "Isajon Sulton",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Azal muhri” (roman)",
+    "author": "Baxtiyor Abdug‘afur",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Mo‘ysafid Biyobonim” (novella va hikoyalar)",
+    "author": "Shahodat Ulug‘",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Munavvar Qorining so‘nggi nidosi” (qissa)",
+    "author": "Abbos Said",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Maqar” (qissa)",
+    "author": "Shuhrat Matkarim",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Tongotar” (roman)",
+    "author": "Raxshona Ahmedova",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Suyumbika” (roman)",
+    "author": "Risolat Haydarova",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Mening Dog‘istonim",
+    "author": "Rasul Hamzatov",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Yevgeniya Grande”(roman)",
+    "author": "Onore de Balzak",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Iqrornoma",
+    "author": "Lev Tolstoy",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": true
+  },
+  {
+    "title": "Bu yerda hamma narsa bo‘lishi mumkin” (roman)",
+    "author": "Jianna Molinari",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Farengeyt bo‘yicha 451 daraja” (roman)",
+    "author": "Rey Bredberi",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Kambag‘allar” (roman)",
+    "author": "Dostoyevskiy",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Choliqushi” (roman)",
+    "author": "Rashod Nuri Guntekin",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Klod Gyo” (qissa)",
+    "author": "Viktor Gyugo",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Yulduzlararo sargardon” (roman)",
+    "author": "Jek London",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Kon-Tikida safar” (roman)",
+    "author": "Tur Xeyerdal",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Mening hayotim",
+    "author": "Henri Ford",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Jasorat” to‘plami",
+    "author": "Mualliflar jamoasi",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Yoshlik” jurnali 2026-yil sonlari",
+    "author": "",
+    "group": "yosh",
+    "age": "15–19",
+    "mutolaa": false
+  },
+  {
+    "title": "Murodxon",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": true
+  },
+  {
+    "title": "Xoldorxon",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Qo‘rqut Ota kitobi",
+    "author": "Xalq og‘zaki ijodi",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Saddi Iskandariy”(nasriy bayon)",
+    "author": "Alisher Navoiy",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Dunyo o‘tib boradir” (she’rlar)",
+    "author": "Maxtumquli",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Najot yo‘li",
+    "author": "Fitrat",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Mehrobdan chayon” (roman)",
+    "author": "Abdulla Qodiriy",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Shoirning tug‘ilishi” (she’rlar)",
+    "author": "Abdulla Oripov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Javzo tashrifi” (She’rlari)",
+    "author": "Matnazar Abdulhakim",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "Xurshid Davron",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Tirik ruhlar” (roman)",
+    "author": "Shukrullo",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Oltin zanglamas” (roman)",
+    "author": "Shuhrat",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Til nomusi",
+    "author": "Ahmad A’zam",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Boboso‘z izidan",
+    "author": "Eshqobil Shukur",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Yaldo kechasi” (roman)",
+    "author": "Xayriddin Sulton",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Donishmand Sizif” (roman)",
+    "author": "Xurshid Do‘stmuhammad",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Ot kishnagan oqshom” (qissa)",
+    "author": "Tog‘ay Murod",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Kiprikda qolgan tong” (qissa)",
+    "author": "Said Ahmad",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Oybegim mening",
+    "author": "Zarifa Saidnosirova",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Yurak dardi” (roman-xotira)",
+    "author": "Matyoqub Qo‘shjonov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Quyun izlari yoxud Ogahiy” (roman)",
+    "author": "Erkin Samandar",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Oxirat uyqusi” (roman)",
+    "author": "Muratbay Nizanov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Umrlar gulshani” (roman-esse)",
+    "author": "Muhammad Ali",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Botir Tangriqut” (roman)",
+    "author": "Isajon Sulton",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Giryon” (roman)",
+    "author": "Nazar Eshonqul",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Momaqaldiroq ostida sayr” (roman)",
+    "author": "Erkin A’zam",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Oybolta ostidagi olomon",
+    "author": "Olim Toshboyev",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Xiva bosqini” (roman)",
+    "author": "Oxunjon Hakimov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "O‘zbekxon. Oltin O‘rda sirlari” (roman)",
+    "author": "Mahmudjon Qozoqboyev",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Sharaf yo‘li” (biografik roman)",
+    "author": "Abduqayum Yo‘ldoshev",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Qo‘rboshi Madaminbek” (hujjatli qissa)",
+    "author": "Alisher Ibodinov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Burgut cho‘qqi",
+    "author": "Allanazar Abdiyev",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Bu yerda hamma narsa bo‘lishi mumkin” (roman)",
+    "author": "Jianna Molinari",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Hello, Amerika",
+    "author": "Bahodir Jabborov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Tog‘dagi yolg‘iz odam” (qissa)",
+    "author": "Normurod Norqobilov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Turkistonda jadidchilik",
+    "author": "Adib Xolid",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Turkiston: Rossiya va Xitoy oralig‘ida",
+    "author": "Boymirza Hayit",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Bir vijdon uyg‘onur” (roman)",
+    "author": "Ahmad Lutfi Qozonchi",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Alvido, Vatan",
+    "author": "A’zam Hoshimiy",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "1984” (roman)",
+    "author": "Jorj Oruell",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Usta va Margarita” (roman)",
+    "author": "Mixail Bulgakov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Yolg‘izlikning yuz yili” (roman)",
+    "author": "Gabriel Garsia Markes",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Tasbeh daraxti soyasida” (roman)",
+    "author": "Harper Li",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Pashshalar hukmdori” (roman)",
+    "author": "Uilyam Golding",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Turkiston kundaligi",
+    "author": "Fris Uilfort",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Gorio ota” (roman)",
+    "author": "Onoro de Balzak",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Kulayotgan odam” (roman)",
+    "author": "Viktor Gyugo",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Jon” (qissa)",
+    "author": "Andrey Platonov",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Jasorat” to‘plami",
+    "author": "Mualliflar jamoasi",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "Yoshlik” jurnali 2026-yil sonlari",
+    "author": "",
+    "group": "yosh",
+    "age": "20–30",
+    "mutolaa": false
+  },
+  {
+    "title": "O'tkan kunlar",
+    "author": "Abdulla Qodiriy",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Kecha va kunduz",
+    "author": "Abdulhamid Cho'lpon",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Tushda kechgan umrlar\", \"Ikki eshik orasi",
+    "author": "O'tkir Hoshimov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Lolazor",
+    "author": "Murod Muhammad Do'st",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Otamdan qolgan dalalar",
+    "author": "Tog'ay Murod",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Qiyomat\", \"Asrga tatigulik kun",
+    "author": "Chingiz Aytmatov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Zamonamiz qahramoni",
+    "author": "Mixail Lermontov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Yashamoq",
+    "author": "Yuy Xua",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Sag'ri teri tilsimi",
+    "author": "Onore de Balzak",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Graf Monte Kristo\" (\"If qal'asining mahbusi\", 1-kitob)",
+    "author": "Aleksandr Dyuma",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Yo'l-yo'l poyjoma kiygan bolakay",
+    "author": "Jon Boyn",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Gulliverning sayohatlari",
+    "author": "Jonatan Svift",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Sudxo'rning o'limi",
+    "author": "Sadriddin Ayniy",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Chapaklar va chalpaklar mamlakati",
+    "author": "Erkin A'zam",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Oq kema",
+    "author": "Chingiz Aytmatov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Molxona",
+    "author": "Jorj Oruell",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Kichkina shahzoda",
+    "author": "Antuan de Sent-Ekzyuperi",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Temir xotin",
+    "author": "Sharof Boshbekov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Ranjkom",
+    "author": "Abdulla Oripov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Asror bobo\", \"Ming bir jon\", \"O'jar\", \"San'atkor\", \"Adabiyot muallimi\", \"Anor",
+    "author": "Abdulla Qahhor",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Mening o'g'rigina bolam",
+    "author": "G'afur G'ulom",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Muzqaymoq",
+    "author": "Odil Yoqubov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Tafakkur",
+    "author": "Zulfiya Qurolboy qizi",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Shamolni tutib bo'lmaydi\", \"Maymun yetaklagan odam",
+    "author": "Nazar Eshonqul",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Puankare",
+    "author": "Abduqayum Yo'ldosh",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Hayotga muhabbat\", \"Oq sukunat",
+    "author": "Jek London",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Hellados",
+    "author": "Nodar Dumbadze",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Garov\", \"Xameleon\", \"Semiz va ozg'in",
+    "author": "Anton Chexov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Mallalar uyushmasi",
+    "author": "Artur Konan Doyl",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Evrilish",
+    "author": "Frans Kafka",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "Hushtak afandi\", \"Adabiyotsevar\", \"Alifboning birinchi harfi\", \"Demokratiya shunqori",
+    "author": "Aziz Nesin",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "Abdulhamid Cho'lpon",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "Usmon Nosir",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "Abdulla Oripov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "Erkin Vohidov",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  },
+  {
+    "title": "She’rlar",
+    "author": "Shavkat Rahmon",
+    "group": "milliy",
+    "age": "",
+    "mutolaa": false
+  }
+]

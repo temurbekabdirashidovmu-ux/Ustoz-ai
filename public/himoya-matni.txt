@@ -1,0 +1,21 @@
+ZIYOMAKON — 3 DAQIQALIK HIMOYA MATNI
+Muallif: chiqishdan oldin o‘z ismingizni ayting.
+
+Assalomu alaykum. Men ZIYOMAKON ta’lim loyihasini taqdim etaman.
+Loyihaning maqsadi — o‘quvchiga tayyor javobni olishdan tashqari, mavzuni tushunish va o‘z bilimini tekshirish imkonini berish.
+
+O‘quvchi odatda kitobni bir joydan, tushuntirishni ikkinchi joydan va mashqni uchinchi joydan qidiradi. ZIYOMAKON bu jarayonlarni bitta o‘rganish yo‘lida birlashtiradi: kitobni o‘qish, AI ustozdan tushuntirish so‘rash va o‘zini tekshirish.
+
+Hozir kutubxonada ochiq manbali to‘liq matnlardan tayyorlangan PDF’lar bor. Kitoblar saytning o‘zida sahifalab ochiladi. Haqiqiy kitoblar sonini ekrandagi hisoblagichdan ko‘rsataman. O‘qish ro‘yxatidagi nomlar yuklangan PDF deb sanalmaydi. Muallif va litsenziyalar kitob ichida ko‘rsatilgan.
+
+AI ustoz server orqali Gemini xizmatiga murojaat qiladi. API kaliti foydalanuvchining brauzeriga yuborilmaydi. Tashqi xizmat javob bermasa, sayt buni xato holati sifatida ko‘rsatadi. Men AI’ni mutlaq to‘g‘ri manba deb taqdim etmayman.
+
+Loyihaning yangi amaliy qismi — Nyuton qonunlari bo‘yicha bosqichli mashq. O‘quvchi dastlab to‘rtta savolni yechadi, qisqa darsni o‘rganadi va boshqa to‘rtta savol bilan bilimi qanday o‘zgarganini tekshiradi. So‘ng xatolariga qaytishi mumkin.
+
+O‘quvchi rozilik bersagina ikki balli va tushunarlilik bahosi onlayn saqlanadi. Ism, telefon va email so‘ralmaydi. Hisobotdagi seanslar soni noyob odamlar soni emas. Bitta qisqa mashq natijasini ilmiy isbot deb ko‘rsatmayman. Hozir mavjud haqiqiy natijalarni ko‘rsataman; bo‘lmasa, hali ma’lumot yig‘ilmaganini aytaman.
+
+Texnik jihatdan PDF’lar fayl omborida, kitob tavsiflari va anonim natijalar ma’lumotlar bazasida turadi. Kitob qo‘shish va tahrirlash sayt egasi va u email orqali ruxsat bergan administratorlarga ochiq. Admin ruxsatini faqat sayt egasi boshqaradi. Loyiha AI yordamida ishlab chiqilgan; foydalanilgan yordamni va o‘z hissamni ochiq tushuntiraman.
+
+Keyingi maqsad — o‘qituvchi bilan mashqlarni tekshirish, haqiqiy ko‘ngilli o‘quvchilardan fikr olish, boshqa fanlarni qo‘shish va ruxsatli kitoblar to‘plamini kengaytirish.
+
+Rahmat. Endi PDF o‘qish, bosqichli mashq va haqiqiy natijalar bo‘limini namoyish qilaman.

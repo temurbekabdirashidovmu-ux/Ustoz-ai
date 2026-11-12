@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1793979520805,
+      "tag": "0000_huge_shocker",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1794028453854,
+      "tag": "0001_elite_annihilus",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1794034366065,
+      "tag": "0002_sour_piledriver",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1794041419340,
+      "tag": "0003_useful_otto_octavius",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1794041987289,
+      "tag": "0004_aspiring_sunspot",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+[
+  {
+    "id": "curated-otkan-kunlar",
+    "title": "O‘tkan kunlar",
+    "author": "Abdulla Qodiriy",
+    "language": "uz",
+    "category": "Mumtoz adabiyot",
+    "description": "Roman. Yozg‘uchidan va 57 bob. Ochiq matn asosidagi elektron nashr.",
+    "source": "https://wikisource.org/w/index.php?title=O%27tkan_kunlar&oldid=997410 | Wikisource contributors; CC BY-SA 4.0; original public domain",
+    "size": 918720,
+    "hash": "6860677ff91fb5d018daf314cf9639585cfc334de11e3317bf80eec6c9799cfe",
+    "pages": 566,
+    "groups": [
+      "milliy"
+    ],
+    "path": "/books/otkan-kunlar.pdf",
+    "parts": 58,
+    "characters": 696585
+  },
+  {
+    "id": "curated-kecha-va-kunduz",
+    "title": "Kecha va kunduz",
+    "author": "Abdulhamid Cho‘lpon",
+    "language": "uz",
+    "category": "Mumtoz adabiyot",
+    "description": "Roman. Saqlanib qolgan “Kecha” qismining 20 bobi. “Kunduz” qismi ushbu nashrga kirmaydi.",
+    "source": "https://wikisource.org/w/index.php?title=Kecha_va_kunduz&oldid=997211 | Wikisource contributors; CC BY-SA 4.0; original public domain",
+    "size": 678092,
+    "hash": "dbc6eb14b963ca4e05eecd587fdd17e43ffb643047f5a7932d83737f0295bc98",
+    "pages": 399,
+    "groups": [
+      "milliy",
+      "mutolaa"
+    ],
+    "path": "/books/kecha-va-kunduz.pdf",
+    "parts": 20,
+    "characters": 502720
+  },
+  {
+    "id": "curated-padarkush",
+    "title": "Padarkush",
+    "author": "Mahmudxo‘ja Behbudiy",
+    "language": "uz",
+    "category": "Mumtoz adabiyot",
+    "description": "Uch parda va to‘rt manzarali drama. Ochiq matn asosidagi elektron nashr.",
+    "source": "https://wikisource.org/w/index.php?title=Padarkush&oldid=996213 | Wikisource contributors; CC BY-SA 4.0; original public domain",
+    "size": 72343,
+    "hash": "13418d50b7d12289b075b6254eaafb35594f07f31ae69299001bcb962af3d92b",
+    "pages": 19,
+    "groups": [
+      "mutolaa"
+    ],
+    "path": "/books/padarkush.pdf",
+    "parts": 1,
+    "characters": 19907
+  },
+  {
+    "id": "curated-turkiy-guliston",
+    "title": "Turkiy guliston yoxud axloq",
+    "author": "Abdulla Avloniy",
+    "language": "uz",
+    "category": "Mumtoz adabiyot",
+    "description": "Ta’lim, tarbiya va axloqqa bag‘ishlangan asar. Ochiq matn asosidagi elektron nashr.",
+    "source": "https://wikisource.org/w/index.php?title=Turkiy_Guliston_yoxud_axloq&oldid=1347034 | Wikisource contributors; CC BY-SA 4.0; original public domain",
+    "size": 98754,
+    "hash": "5100c31fe6bc46a015cafa4995432f942cec4057cc0613e7077e47cb5a52f9b9",
+    "pages": 35,
+    "groups": [
+      "mutolaa"
+    ],
+    "path": "/books/turkiy-guliston.pdf",
+    "parts": 1,
+    "characters": 43055
+  },
+  {
+    "id": "curated-baxtsiz-kuyov",
+    "title": "Baxtsiz kuyov",
+    "author": "Abdulla Qodiriy",
+    "language": "uz",
+    "category": "Mumtoz adabiyot",
+    "description": "To‘rt pardali fojia. Ochiq matn asosidagi elektron nashr.",
+    "source": "https://wikisource.org/w/index.php?title=Baxtsiz_kuyov&oldid=996214 | Wikisource contributors; CC BY-SA 4.0; original public domain",
+    "size": 88736,
+    "hash": "21a0a0870b44de9913db83617a6c950b7840e4b366162ab1bd68dd310fb7f85b",
+    "pages": 29,
+    "groups": [],
+    "path": "/books/baxtsiz-kuyov.pdf",
+    "parts": 1,
+    "characters": 34398
+  },
+  {
+    "id": "curated-muxtasar-tarix",
+    "title": "Muxtasar tarixi anbiyo va tarixi Islom",
+    "author": "Abdulla Avloniy",
+    "language": "uz",
+    "category": "Mumtoz adabiyot",
+    "description": "1913-yilgi tarixiy-ma’rifiy asar. Tarixiy matndagi qarash va imlo saqlangan.",
+    "source": "https://wikisource.org/w/index.php?title=Muxtasar_tarixi_anbiyo_va_tarixi_Islom&oldid=1349819 | Wikisource contributors; CC BY-SA 4.0; original public domain",
+    "size": 127352,
+    "hash": "561b355acf07a3b4f2147a23558e623ab44034393c1c8ede56400a22060568e0",
+    "pages": 52,
+    "groups": [],
+    "path": "/books/muxtasar-tarix.pdf",
+    "parts": 1,
+    "characters": 71953
+  },
+  {
+    "id": "curated-uloqda",
+    "title": "Uloqda",
+    "author": "Abdulla Qodiriy",
+    "language": "uz",
+    "category": "Mumtoz adabiyot",
+    "description": "Hikoya. Ochiq matn asosidagi elektron nashr.",
+    "source": "https://wikisource.org/w/index.php?title=Uloqda&oldid=995398 | Wikisource contributors; CC BY-SA 4.0; original public domain",
+    "size": 67098,
+    "hash": "06d2f4b30788fc5ef1dfac298a845bc147f60c5225ad86aefba569bbb6ad63b2",
+    "pages": 15,
+    "groups": [],
+    "path": "/books/uloqda.pdf",
+    "parts": 1,
+    "characters": 17470
+  },
+  {
+    "id": "curated-white-fang",
+    "title": "White Fang",
+    "author": "Jack London",
+    "language": "en",
+    "category": "Mumtoz adabiyot",
+    "description": "“Oq so‘yloq” asarining inglizcha asl nusxasi. O‘zbekcha tarjima emas. Yosh kitobxon ro‘yxatidagi asarni ingliz tilida mutolaa qilish uchun.",
+    "source": "https://www.gutenberg.org/cache/epub/910/pg910.txt | Original public domain; Project Gutenberg license retained",
+    "size": 493699,
+    "hash": "c8c31643ceb94bbb495017f0ef5cd6365f54d1ffbaf11d9975e26cbcc2c8f258",
+    "pages": 274,
+    "groups": [
+      "yosh"
+    ],
+    "path": "/books/white-fang.pdf",
+    "parts": 1,
+    "characters": 416808,
+    "listTitle": "Oq so‘yloq",
+    "listAuthor": "Jek London"
+  },
+  {
+    "id": "curated-eighty-days",
+    "title": "Around the World in Eighty Days",
+    "author": "Jules Verne",
+    "language": "en",
+    "category": "Mumtoz adabiyot",
+    "description": "“Dunyo bo‘ylab sakson kun” asarining inglizcha asl nusxasi (George M. Towle tarixiy tarjimasi). O‘zbekcha tarjima emas. Yosh kitobxon ro‘yxatidagi asarni ingliz tilida mutolaa qilish uchun.",
+    "source": "https://www.gutenberg.org/cache/epub/103/pg103.txt | Original public domain; Project Gutenberg license retained",
+    "size": 500154,
+    "hash": "c2a81dc0010216d7c370f5a0c96ed699414f6fcce4b78ab9c21d56765d189e6d",
+    "pages": 277,
+    "groups": [
+      "yosh"
+    ],
+    "path": "/books/eighty-days.pdf",
+    "parts": 1,
+    "characters": 388526,
+    "listTitle": "Dunyo bo‘ylab sakson kun",
+    "listAuthor": "Jyul Vern"
+  },
+  {
+    "id": "curated-wind-willows",
+    "title": "The Wind in the Willows",
+    "author": "Kenneth Grahame",
+    "language": "en",
+    "category": "Mumtoz adabiyot",
+    "description": "“Tolzordan esgan shamol” asarining inglizcha asl nusxasi. O‘zbekcha tarjima emas. Yosh kitobxon ro‘yxatidagi asarni ingliz tilida mutolaa qilish uchun.",
+    "source": "https://www.gutenberg.org/cache/epub/289/pg289.txt | Original public domain; Project Gutenberg license retained",
+    "size": 428783,
+    "hash": "b33e4785c97c1374ba4a26e488a8ef964623add079fbd3578b60449f9fad941c",
+    "pages": 226,
+    "groups": [
+      "yosh"
+    ],
+    "path": "/books/wind-willows.pdf",
+    "parts": 1,
+    "characters": 344109,
+    "listTitle": "Tolzordan esgan shamol",
+    "listAuthor": "Kennet Grehem"
+  }
+]

@@ -1,0 +1,10 @@
+import {db} from './service';
+import {identity} from './admin-auth';
+export function username(value:unknown){if(typeof value!=='string')throw new Error('Username kiriting.');const name=value.trim().toLowerCase();if(!/^[a-z][a-z0-9_]{2,23}$/.test(name))throw new Error('Username 3–24 ta lotin harfi, raqam va _ dan iborat bo‘lsin; harf bilan boshlansin.');if(['admin','administrator','owner','ziyomakon','support','moderator','root'].includes(name))throw new Error('Bu username band. Boshqasini tanlang.');return name;}
+export async function student(req:Request){const u=identity(req);if(!u.userId||!u.email)return null;return db().prepare('SELECT user_id,email,username,created_at,last_seen_at FROM student_profiles WHERE user_id=?').bind(u.userId).first<any>();}
+export async function touch(req:Request){const u=identity(req);if(!u.userId)return;const now=new Date().toISOString(),before=new Date(Date.now()-300000).toISOString();await db().prepare('UPDATE student_profiles SET last_seen_at=? WHERE user_id=? AND last_seen_at<?').bind(now,u.userId,before).run();}
+export function relative(value:unknown,fallback='/'){return typeof value==='string'&&/^\/(?!\/)/.test(value)&&!/[\\\r\n]/.test(value)?value:fallback;}
+export function expectedEmail(req:Request){const v=(req.headers.get('cookie')||'').split(';').map(s=>s.trim()).find(s=>s.startsWith('ziyo_email='));try{return v?decodeURIComponent(v.slice(11)):'';}catch{return '';}}
+export async function rankData(){const q=await db().prepare(`SELECT p.username,s.best_score,s.attempts,s.achieved_at,ROW_NUMBER() OVER (ORDER BY s.best_score DESC,s.achieved_at ASC,s.user_id ASC) AS rank FROM student_scores s JOIN student_profiles p ON p.user_id=s.user_id WHERE s.attempts>0 ORDER BY rank LIMIT 100`).all();return q.results as any[];}
+
+export function expectedUsername(req:Request){const v=(req.headers.get("cookie")||"").split(";").map(s=>s.trim()).find(s=>s.startsWith("ziyo_login_user="));try{return v?decodeURIComponent(v.slice(16)):"";}catch{return "invalid";}}
