@@ -24,7 +24,9 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch})
   const origin = new URL(publicOrigin).origin;
   if(secret.length<43) throw new Error('HOSTING_PROXY_SECRET is required');
   async function handle(req, res) {
-    const headers = {'Cache-Control':'no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'};
+    // Native form POSTs can acquire an opaque Origin under no-referrer.
+    // Keep the browser's same-origin signal for CSRF checks on ordinary pages.
+    const headers = {'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store','Referrer-Policy':'strict-origin-when-cross-origin','X-Content-Type-Options':'nosniff'};
     function send(status, body = '', extra = {}) {res.writeHead(status, {...headers,...extra});res.end(body);}
     function redirect(location, extra = {}) {send(303,'',{Location:location,...extra});}
     if(req.url === '/healthz') return send(200,'ok',{'Content-Type':'text/plain'});
@@ -36,14 +38,14 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch})
       const state = randomBytes(32).toString('base64url');
       const returnTo = safeReturnPath(url.searchParams.get('return_to') || '/');
       const next = backend+'/hosting/login?state='+state+'&return_to='+encodeURIComponent(returnTo);
-      return redirect(next,{'Set-Cookie':cookie(PENDING,state,300),'X-Robots-Tag':'noindex,nofollow'});
+      return redirect(next,{'Set-Cookie':cookie(PENDING,state,300),'X-Robots-Tag':'noindex,nofollow','Referrer-Policy':'no-referrer'});
     }
     if(url.pathname === '/auth/callback') {
       const data = await verifyToken(secret,url.searchParams.get('token'),'login',origin);
-      if(!data || !jar[PENDING] || data.state !== jar[PENDING] || !validIdentity(data.identity)) return send(403,'Kirish so‘rovi eskirgan. Saytdan qayta kirishni bosing.',{'X-Robots-Tag':'noindex,nofollow'});
+      if(!data || !jar[PENDING] || data.state !== jar[PENDING] || !validIdentity(data.identity)) return send(403,'Kirish so‘rovi eskirgan. Saytdan qayta kirishni bosing.',{'X-Robots-Tag':'noindex,nofollow','Referrer-Policy':'no-referrer'});
       const now=Date.now();
       const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+24*60*60*1000,identity:data.identity});
-      return redirect(safeReturnPath(data.returnTo),{'Set-Cookie':[cookie(SESSION,token,86400),cookie(PENDING,'',0)],'X-Robots-Tag':'noindex,nofollow'});
+      return redirect(safeReturnPath(data.returnTo),{'Set-Cookie':[cookie(SESSION,token,86400),cookie(PENDING,'',0)],'X-Robots-Tag':'noindex,nofollow','Referrer-Policy':'no-referrer'});
     }
     if(url.pathname === '/signout-with-chatgpt') return redirect(safeReturnPath(url.searchParams.get('return_to')||'/'),{'Set-Cookie':[cookie(SESSION,'',0),cookie(PENDING,'',0),cookie('ziyo_email','',0),cookie('ziyo_login_user','',0)]});
     if(url.pathname.startsWith('/hosting/') || url.pathname.startsWith('/auth/')) return send(404,'Topilmadi.');
@@ -64,7 +66,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch})
     const response=await fetcher(backend+url.pathname+url.search,{method:req.method,headers:forwarded,body:unsafe?body:undefined,redirect:'manual',signal:AbortSignal.timeout(90000)});
     const out=new Headers(response.headers);
     for(const name of ['content-length','content-encoding','transfer-encoding','connection','set-cookie','alt-svc'])out.delete(name);
-    out.set('Cache-Control','private, no-store');out.set('Vary','Cookie');out.set('Referrer-Policy','no-referrer');
+    out.set('Cache-Control','private, no-store');out.set('Vary','Cookie');out.set('Referrer-Policy','strict-origin-when-cross-origin');
     const location=out.get('location');
     if(location){const dest=new URL(location,backend);if(dest.origin===backend)out.set('Location',origin+dest.pathname+dest.search+dest.hash);}
     const responseCookies=response.headers.getSetCookie?.()||[];
