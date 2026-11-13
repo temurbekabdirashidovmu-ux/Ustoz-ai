@@ -56,10 +56,10 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     }
     if(url.pathname === '/auth/google/callback') {
       const authHeaders={'Content-Type':'text/html; charset=utf-8','Referrer-Policy':'no-referrer','X-Robots-Tag':'noindex,nofollow','Set-Cookie':cookie(GOOGLE_PENDING,'',0)};
-      const fail=()=>send(403,googleLoginPage({clientId:'',nonce:'',origin,error:'Google tasdig‘i qabul qilinmadi. Kirish sahifasini qayta oching.'}),authHeaders);
+      const fail=(error='Google tasdig‘i qabul qilinmadi. Kirish sahifasini qayta oching.',status=403)=>send(status,googleLoginPage({clientId:'',nonce:'',origin,error}),authHeaders);
       if(!googleEnabled || req.method!=='POST')return fail();
       const pending=await verifyToken(secret,jar[GOOGLE_PENDING],'google-pending',origin);
-      if(!pending || typeof pending.nonce!=='string')return fail();
+      if(!pending || typeof pending.nonce!=='string')return fail('Kirish vaqti tugagan yoki brauzer kirish cookie’sini qabul qilmagan. Google orqali qayta boshlang.');
       let size=0;const chunks=[];
       for await(const chunk of req){size+=chunk.length;if(size>20000)return fail();chunks.push(chunk);}
       let form;try{const raw=Buffer.concat(chunks).toString();form=(req.headers['content-type']||'').startsWith('application/json')?JSON.parse(raw):Object.fromEntries(new URLSearchParams(raw));}catch{return fail();}
@@ -79,9 +79,9 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
       // Resolve the provider subject to an existing profile before issuing a session.
       const backendIdentity=legacyMap?googleGatewayIdentity(identity,legacyMap):identity;
       const proof=await signToken(secret,{purpose:'request',aud:backend,origin,iat:now,exp:now+45000,method:'GET',path:'/api/profile',body:await hashBody(new Uint8Array()),identity:backendIdentity});
-      let profile;try{profile=await fetcher(backend+'/api/profile',{headers:{...backendHeaders,'x-ziyomakon-proof':proof},redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{return fail();}
-      if(profile.status!==200)return fail();
-      const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+86400000,identity});
+      let profile;try{profile=await fetcher(backend+'/api/profile',{headers:{...backendHeaders,'x-ziyomakon-proof':proof},redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{return fail('Profil xizmatiga ulanib bo‘lmadi. Google orqali qayta urinib ko‘ring.',503);}
+      if(profile.status!==200)return fail('Profilni ochib bo‘lmadi. Google orqali qayta urinib ko‘ring.',503);
+      const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+86400000,identity,returnTo:safeReturnPath(pending.returnTo)});
       return redirect(safeReturnPath(pending.returnTo),{...authHeaders,'Set-Cookie':[cookie(SESSION,token,86400),cookie(GOOGLE_PENDING,'',0),cookie(PENDING,'',0)]});
     }
     if(googleEnabled && url.pathname==='/auth/callback')return send(410,'Bu kirish usuli almashtirilgan. Google orqali kiring.',{'Referrer-Policy':'no-referrer'});
@@ -109,6 +109,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     const session=await verifyToken(secret,jar[SESSION],'session',origin);
     const sessionIdentity=session&&validIdentity(session.identity)&&(!googleEnabled||session.identity.provider==='google')?session.identity:null;
     const identity=sessionIdentity&&googleEnabled&&legacyMap?googleGatewayIdentity(sessionIdentity,legacyMap):sessionIdentity;
+    if(googleEnabled && !identity && url.pathname==='/' && url.searchParams.get('bolim')==='teacher')return redirect('/auth/google/start?return_to='+encodeURIComponent(url.pathname+url.search));
     const forwarded=new Headers();
     for(const [name,value] of Object.entries(req.headers)) if(passHeaders.has(name)&&typeof value==='string')forwarded.set(name,value);
     const kept=safeCookies(req.headers.cookie);if(kept)forwarded.set('cookie',kept);
@@ -128,6 +129,10 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     if(/text\/|application\/(?:json|javascript|xml)|image\/svg\+xml/.test(type))text=(await response.text()).replaceAll(backend,origin);
     if(googleEnabled && text!==undefined && type.includes('text/html'))text=text.replaceAll('/signin-with-chatgpt','/auth/google/start').replaceAll('/signout-with-chatgpt','/auth/logout').replaceAll('ChatGPT hisobingiz','Google hisobingiz').replaceAll('ChatGPT hisobi','Google hisobi').replaceAll('ChatGPT hisobing','Google hisobing').replaceAll('ChatGPT orqali kirish','Google orqali kirish');
     if(text!==undefined && type.includes('text/html'))text=compactNavigationPage(text,url.pathname);
+    if(googleEnabled && identity && url.pathname==='/profil' && text?.includes('id="profileForm"') && session.returnTo && session.returnTo!=='/profil') {
+      const returnTo=safeReturnPath(session.returnTo);
+      text=text.replace("location.href='/';",'location.href='+JSON.stringify(returnTo).replaceAll('<','\\u003c')+';');
+    }
     if(/^(?:\/admin|\/api\/|\/profil|\/kirish|\/sozlash|\/bellashuv|\/google[^/]+\.html)/.test(url.pathname))out.set('X-Robots-Tag','noindex,nofollow');
     const headerObject=Object.fromEntries(out);if(accepted.length)headerObject['set-cookie']=accepted;
     res.writeHead(response.status,headerObject);

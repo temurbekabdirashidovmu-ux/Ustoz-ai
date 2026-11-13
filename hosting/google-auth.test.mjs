@@ -39,6 +39,7 @@ const secret='test-only-'.repeat(8),origin='http://127.0.0.1:19488';let verifica
 const server=createGateway({upstream:'https://backend.invalid',publicOrigin:origin,secret,googleClientId:clientId,googleVerifier:async(value)=>{verificationCalls++;if(value!=='signed-test-credential')throw Error('Invalid');return identity;},fetcher:async(url)=>Response.json(url.endsWith('/api/health')?{googleAuthReady:backendReady,authBackend:'google-v1'}:{profile:null})});
 server.listen(19488,'127.0.0.1');await once(server,'listening');
 try{
+ let redirect=await fetch(origin+'/?bolim=teacher',{redirect:'manual'});assert.equal(redirect.status,303);assert.equal(redirect.headers.get('location'),'/auth/google/start?return_to=%2F%3Fbolim%3Dteacher');
  let r=await fetch(origin+'/kirish');assert.equal(r.status,200);const html=await r.text();assert(html.includes('accounts.google.com/gsi/client'));assert(!html.includes('ChatGPT'));assert(!html.includes('password'));
  const rawCookie=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_google_pending='));assert(rawCookie.includes('HttpOnly'));assert(rawCookie.includes('SameSite=None'));
  const pendingCookie=rawCookie.split(';')[0],pendingToken=pendingCookie.slice(pendingCookie.indexOf('=')+1);
@@ -52,6 +53,9 @@ try{
  const issued=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];const value=issued.slice(issued.indexOf('=')+1);assert.equal((await verifyToken(secret,value,'session',origin)).identity.provider,'google');
  backendReady=false;
  r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie+'; g_csrf_token='+data.get('g_csrf_token')},redirect:'manual'});assert.equal(r.status,503);assert(!r.headers.getSetCookie().some(c=>c.startsWith('__Host-ziyo_render=')));
- r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,redirect:'manual'});assert.equal(r.status,403);
+ r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,redirect:'manual'});assert.equal(r.status,403);assert((await r.text()).includes('Kirish vaqti tugagan'));
+ const old=Date.now()-700000,expired=await signToken(secret,{purpose:'google-pending',aud:origin,iat:old,exp:old+600000,nonce:'old-nonce-'.repeat(5),returnTo:'/profil'});
+ r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:'__Host-ziyo_google_pending='+expired+'; g_csrf_token='+data.get('g_csrf_token')},redirect:'manual'});assert.equal(r.status,403);assert((await r.text()).includes('Kirish vaqti tugagan'));
+
  console.log('Google signature, audience, nonce, CSRF, Google-only login, legacy profiles, scores and administrator bindings passed. All identities are test-only.');
 }finally{server.close();server.closeAllConnections();}

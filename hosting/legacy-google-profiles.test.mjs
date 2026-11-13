@@ -19,6 +19,7 @@ const server=createGateway({upstream:'https://backend.invalid',publicOrigin:orig
   const value=options.headers instanceof Headers?options.headers.get('x-ziyomakon-proof'):options.headers['x-ziyomakon-proof'];
   const proof=await verifyToken(secret,value,'request','https://backend.invalid');
   assert.equal(proof.identity.userId,'legacy-reader');assert.equal(proof.identity.subject,identity.subject);assert.equal(proof.identity.provider,'google-gateway');
+  if(url.endsWith('/profil'))return new Response("<form id=\"profileForm\"></form><script>location.href='/';</script>",{headers:{'Content-Type':'text/html'}});
   forwarded.push(proof);return Response.json({profile:{username:'reader_01'}});
 }});
 server.listen(19489,'127.0.0.1');await once(server,'listening');
@@ -28,6 +29,9 @@ try {
   r=await fetch(origin+'/auth/google/callback',{method:'POST',body:new URLSearchParams({credential:'test-only',g_csrf_token:csrf}),headers:{Cookie:pending+'; g_csrf_token='+csrf},redirect:'manual'});
   assert.equal(r.status,303);const session=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];
   r=await fetch(origin+'/api/profile',{headers:{Cookie:session,'oai-authenticated-user-id':'attacker'}});assert.equal(r.status,200);assert.equal((await r.json()).profile.username,'reader_01');assert.equal(forwarded.length,2);
+  const returnTo='/?bolim=teacher';r=await fetch(origin+'/kirish?return_to='+encodeURIComponent(returnTo));const nextPending=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_google_pending=')).split(';')[0];
+  r=await fetch(origin+'/auth/google/callback',{method:'POST',body:new URLSearchParams({credential:'test-only',g_csrf_token:csrf}),headers:{Cookie:nextPending+'; g_csrf_token='+csrf},redirect:'manual'});assert.equal(r.status,303);assert.equal(r.headers.get('location'),returnTo);const nextSession=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];
+  r=await fetch(origin+'/profil',{headers:{Cookie:nextSession}});const setup=await r.text();assert(setup.includes('location.href=\"/?bolim=teacher\";'));
   // A legacy ChatGPT session cannot enter the Google-only gateway.
   r=await fetch(origin+'/auth/callback?token=old',{redirect:'manual'});assert.equal(r.status,410);
   console.log('Google gateway compatibility preserves reviewed Gmail profile IDs and rejects ambiguous or unverified links.');
