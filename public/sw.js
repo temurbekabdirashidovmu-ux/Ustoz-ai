@@ -1,0 +1,1 @@
+const CACHE='ziyomakon-app-v2';self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['/icon-192.png','/icon-512.png'])));self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ns=>Promise.all(ns.filter(n=>n.startsWith('ziyomakon-app-')&&n!==CACHE).map(n=>caches.delete(n)))).then(()=>self.clients.claim()));});
