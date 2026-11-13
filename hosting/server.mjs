@@ -64,9 +64,17 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
       let identity;try{identity=await googleVerifier(form.credential,{clientId:googleClientId,nonce:pending.nonce});}catch{return fail();}
       if(!validIdentity(identity) || identity.provider!=='google')return fail();
       const now=Date.now();
+      const backendHeaders={};
+      if(typeof req.headers['user-agent']==='string')backendHeaders['user-agent']=req.headers['user-agent'];
+      // Do not issue a Google session against an older profile mapper.
+      try {
+        const health=await fetcher(backend+'/api/health',{headers:backendHeaders,redirect:'manual',signal:AbortSignal.timeout(20000)});
+        const state=health.status===200?await health.json():null;
+        if(!state?.googleAuthReady||state.authBackend!=='google-v1')return send(503,'Google kirish xizmati yangilanmoqda. Birozdan keyin qayta urinib ko‘ring.',{'Retry-After':'30'});
+      }catch{return send(503,'Google kirish xizmati bilan aloqa o‘rnatilmadi. Qayta urinib ko‘ring.',{'Retry-After':'30'});}
       // Resolve the provider subject to an existing profile before issuing a session.
       const proof=await signToken(secret,{purpose:'request',aud:backend,origin,iat:now,exp:now+45000,method:'GET',path:'/api/profile',body:await hashBody(new Uint8Array()),identity});
-      let profile;try{profile=await fetcher(backend+'/api/profile',{headers:{'x-ziyomakon-proof':proof},redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{return fail();}
+      let profile;try{profile=await fetcher(backend+'/api/profile',{headers:{...backendHeaders,'x-ziyomakon-proof':proof},redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{return fail();}
       if(profile.status!==200)return fail();
       const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+86400000,identity});
       return redirect(safeReturnPath(pending.returnTo),{...authHeaders,'Set-Cookie':[cookie(SESSION,token,86400),cookie(GOOGLE_PENDING,'',0),cookie(PENDING,'',0)]});

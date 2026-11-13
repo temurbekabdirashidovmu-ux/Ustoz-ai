@@ -1,15 +1,23 @@
 import {env} from 'cloudflare:workers';
 import {db} from './service';
 import {searchKey} from './book-validation.mjs';
-import payload from './curated-payload.json';
+import manifest from './curated-manifest.json';
+type CuratedBook = (typeof manifest)[number] & {base64:string};
 // Immutable, reviewed public-domain/CC BY-SA books only. No user supplied URL
 // is fetched here. Existing records (including archived books) are preserved.
 let pending:Promise<void>|undefined;
 export async function ensureCuratedBooks(){
  if(pending)return pending;
  pending=(async()=>{
-  const existing=await db().prepare('SELECT id FROM books WHERE id IN ('+payload.map(()=>'?').join(',')+')').bind(...payload.map(x=>x.id)).all();
+  const existing=await db().prepare('SELECT id FROM books WHERE id IN ('+manifest.map(()=>'?').join(',')+')').bind(...manifest.map(x=>x.id)).all();
   const ids=new Set(existing.results.map((x:any)=>x.id));
+  if(manifest.every(book=>ids.has(book.id)))return;
+  // Keep PDF payloads in static assets rather than inflating the Worker module.
+  const assets=(env as unknown as {ASSETS:Fetcher}).ASSETS;
+  const response=await assets.fetch(new Request('https://assets.internal/_curated/books.json'));
+  if(!response.ok)throw new Error('Curated book assets are unavailable');
+  const payload=await response.json() as CuratedBook[];
+  if(!Array.isArray(payload)||payload.length!==manifest.length||payload.some((book,index)=>book.id!==manifest[index].id||book.hash!==manifest[index].hash))throw new Error('Curated book manifest mismatch');
   const bucket=(env as unknown as {BUCKET:R2Bucket}).BUCKET;
   for(const b of payload){
    if(ids.has(b.id))continue;
