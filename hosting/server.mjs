@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {signToken, verifyToken, hashBody, validIdentity, safeReturnPath} from '../lib/hosting-proof.mjs';
 import {validGoogleClientId,verifyGoogleCredential,googleLoginPage,googlePrivacyPage} from './google-auth-bundle.mjs';
 import {legacyGoogleProfiles,googleGatewayIdentity} from './legacy-google-profiles.mjs';
+import {compactNavigationPage} from '../lib/navigation.mjs';
 
 const SESSION = '__Host-ziyo_render';
 const PENDING = '__Host-ziyo_pending';
@@ -126,6 +127,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     let text;
     if(/text\/|application\/(?:json|javascript|xml)|image\/svg\+xml/.test(type))text=(await response.text()).replaceAll(backend,origin);
     if(googleEnabled && text!==undefined && type.includes('text/html'))text=text.replaceAll('/signin-with-chatgpt','/auth/google/start').replaceAll('/signout-with-chatgpt','/auth/logout').replaceAll('ChatGPT hisobingiz','Google hisobingiz').replaceAll('ChatGPT hisobi','Google hisobi').replaceAll('ChatGPT hisobing','Google hisobing').replaceAll('ChatGPT orqali kirish','Google orqali kirish');
+    if(text!==undefined && type.includes('text/html'))text=compactNavigationPage(text,url.pathname);
     if(/^(?:\/admin|\/api\/|\/profil|\/kirish|\/sozlash|\/bellashuv|\/google[^/]+\.html)/.test(url.pathname))out.set('X-Robots-Tag','noindex,nofollow');
     const headerObject=Object.fromEntries(out);if(accepted.length)headerObject['set-cookie']=accepted;
     res.writeHead(response.status,headerObject);
