@@ -1,5 +1,6 @@
 import {html,shell} from './library';
-export const SITE_ORIGIN='https://ziyomakon-bilim-ai.archedcycle2.chatgpt.site';
+import {env} from 'cloudflare:workers';
+export const SITE_ORIGIN=(env as unknown as {HOSTING_PUBLIC_ORIGIN?:string}).HOSTING_PUBLIC_ORIGIN || 'https://ziyomakon-bilim-ai.archedcycle2.chatgpt.site';
 export function publicHome(){
  const title='ZIYOMAKON — O‘zbekcha kitoblar, bilim va AI ustoz';
  const description='ZIYOMAKON: o‘zbekcha PDF kitoblarni onlayn o‘qing, milliy sertifikat va Yosh kitobxon o‘qish ro‘yxatlari bilan tanishing, bilim mashqlari va Muqaddas AI ustoz bilan o‘rganing.';
