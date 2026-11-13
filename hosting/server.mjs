@@ -5,6 +5,7 @@ import {pipeline} from 'node:stream/promises';
 import {fileURLToPath} from 'node:url';
 import {signToken, verifyToken, hashBody, validIdentity, safeReturnPath} from '../lib/hosting-proof.mjs';
 import {validGoogleClientId,verifyGoogleCredential,googleLoginPage,googlePrivacyPage} from './google-auth-bundle.mjs';
+import {legacyGoogleProfiles,googleGatewayIdentity} from './legacy-google-profiles.mjs';
 
 const SESSION = '__Host-ziyo_render';
 const PENDING = '__Host-ziyo_pending';
@@ -21,10 +22,11 @@ export function cookie(name, value, age) {
 export function safeCookies(header) {
   return Object.entries(cookies(header)).filter(([k])=>passCookies.has(k)).map(([k,v])=>`${k}=${v}`).join('; ');
 }
-export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, googleClientId = '', googleVerifier = verifyGoogleCredential}) {
+export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, googleClientId = '', googleVerifier = verifyGoogleCredential, legacyProfiles}) {
   const backend = new URL(upstream).origin;
   const origin = new URL(publicOrigin).origin;
   const googleEnabled=validGoogleClientId(googleClientId);
+  const legacyMap=legacyGoogleProfiles(legacyProfiles);
   if(googleClientId && !googleEnabled)throw new Error('GOOGLE_CLIENT_ID is invalid');
   if(secret.length<43) throw new Error('HOSTING_PROXY_SECRET is required');
   async function handle(req, res) {
@@ -66,14 +68,16 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
       const now=Date.now();
       const backendHeaders={};
       if(typeof req.headers['user-agent']==='string')backendHeaders['user-agent']=req.headers['user-agent'];
-      // Do not issue a Google session against an older profile mapper.
-      try {
+      // Use the database mapper unless an explicitly reviewed Gmail snapshot
+      // enables the gateway compatibility path for the current backend.
+      if(!legacyMap)try {
         const health=await fetcher(backend+'/api/health',{headers:backendHeaders,redirect:'manual',signal:AbortSignal.timeout(20000)});
         const state=health.status===200?await health.json():null;
         if(!state?.googleAuthReady||state.authBackend!=='google-v1')return send(503,'Google kirish xizmati yangilanmoqda. Birozdan keyin qayta urinib ko‘ring.',{'Retry-After':'30'});
       }catch{return send(503,'Google kirish xizmati bilan aloqa o‘rnatilmadi. Qayta urinib ko‘ring.',{'Retry-After':'30'});}
       // Resolve the provider subject to an existing profile before issuing a session.
-      const proof=await signToken(secret,{purpose:'request',aud:backend,origin,iat:now,exp:now+45000,method:'GET',path:'/api/profile',body:await hashBody(new Uint8Array()),identity});
+      const backendIdentity=legacyMap?googleGatewayIdentity(identity,legacyMap):identity;
+      const proof=await signToken(secret,{purpose:'request',aud:backend,origin,iat:now,exp:now+45000,method:'GET',path:'/api/profile',body:await hashBody(new Uint8Array()),identity:backendIdentity});
       let profile;try{profile=await fetcher(backend+'/api/profile',{headers:{...backendHeaders,'x-ziyomakon-proof':proof},redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{return fail();}
       if(profile.status!==200)return fail();
       const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+86400000,identity});
@@ -102,7 +106,8 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     for await(const chunk of req) {length+=chunk.length;if(length>LIMIT)return send(413,'Fayl juda katta.');chunks.push(chunk);}
     const body=Buffer.concat(chunks);
     const session=await verifyToken(secret,jar[SESSION],'session',origin);
-    const identity=session&&validIdentity(session.identity)&&(!googleEnabled||session.identity.provider==='google')?session.identity:null;
+    const sessionIdentity=session&&validIdentity(session.identity)&&(!googleEnabled||session.identity.provider==='google')?session.identity:null;
+    const identity=sessionIdentity&&googleEnabled&&legacyMap?googleGatewayIdentity(sessionIdentity,legacyMap):sessionIdentity;
     const forwarded=new Headers();
     for(const [name,value] of Object.entries(req.headers)) if(passHeaders.has(name)&&typeof value==='string')forwarded.set(name,value);
     const kept=safeCookies(req.headers.cookie);if(kept)forwarded.set('cookie',kept);
@@ -133,7 +138,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
 if(process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const publicOrigin=process.env.PUBLIC_ORIGIN||process.env.RENDER_EXTERNAL_URL;
   if(!publicOrigin||!process.env.UPSTREAM_ORIGIN||!process.env.HOSTING_PROXY_SECRET)throw new Error('Missing hosting configuration');
-  const server=createGateway({upstream:process.env.UPSTREAM_ORIGIN,publicOrigin,secret:process.env.HOSTING_PROXY_SECRET,googleClientId:process.env.GOOGLE_CLIENT_ID||''});
+  const server=createGateway({upstream:process.env.UPSTREAM_ORIGIN,publicOrigin,secret:process.env.HOSTING_PROXY_SECRET,googleClientId:process.env.GOOGLE_CLIENT_ID||'',legacyProfiles:process.env.GOOGLE_LEGACY_PROFILES});
   server.listen(Number(process.env.PORT||10000),'0.0.0.0',()=>console.log('ZIYOMAKON server is ready.'));
   const close=()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(1),25000).unref();};
   process.on('SIGTERM',close);process.on('SIGINT',close);

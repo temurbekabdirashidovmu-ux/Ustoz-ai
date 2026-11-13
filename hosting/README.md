@@ -63,13 +63,25 @@ The GIS double-submit cookie is also required. The browser's signed login-state
 cookie is HttpOnly, Secure and SameSite=None so the Google redirect POST works.
 Callback responses never forward a referrer and credentials are never logged.
 
-Publish the backend migration before enabling the client ID. The Worker maps the
+In the normal mode, publish the backend migration before enabling the client ID. The Worker maps the
 stable Google subject through `google_accounts`. Existing profiles and bound
 administrator IDs are linked only for authoritative Gmail/Workspace emails and
 only when the previous account is unambiguous and unlinked. Scores, usernames,
 quiz runs and previous audit records keep their original user IDs. Existing
 third-party-email profiles require separate ownership verification, rather than
 being silently reassigned. Brand-new Google users choose a username normally.
+
+For an existing backend that already authenticates signed gateway proofs, the
+operator may instead set `GOOGLE_LEGACY_PROFILES` to a private JSON array of
+`{email,userId}` records reviewed from the full current profile and bound-admin
+tables. This compatibility mode keeps those IDs in the gateway's signed proofs;
+the Google signature, subject, nonce, double-submit CSRF and session checks are
+unchanged. Only unique, exact, authoritative Gmail addresses may link a legacy
+profile. New accounts use stable `google:<subject>` IDs. Do not use this mode for
+legacy Workspace or third-party addresses, incomplete exports or ambiguous IDs.
+If a legacy Gmail address changes, its mapping requires operator review before
+the old profile can be recovered. Do not put the mapping in source or client HTML.
+Validate with `node hosting/legacy-google-profiles.test.mjs`.
 
 Without the client ID, the existing deployed login stays available while Google
 setup is incomplete. `/auth/google/start` explicitly reports that setup is still
