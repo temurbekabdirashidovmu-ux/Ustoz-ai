@@ -1,5 +1,6 @@
 # Dependencies
 /node_modules/
+/hosting/node_modules/
 /.pnp
 .pnp.*
 # Keep authored Yarn tooling if the project adopts Yarn.

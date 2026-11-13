@@ -38,3 +38,52 @@ and Render itself disallows robots while a free instance is asleep.
 
 Validation: `node tests/hosting-gateway.mjs`. Keep the original backend available:
 stopping it stops the data and authentication services used by this gateway.
+
+## Direct Google sign-in
+
+Setting `GOOGLE_CLIENT_ID` to a valid web client ID activates direct Google
+Identity Services sign-in on the Render origin. `/kirish` becomes the Google
+sign-in page. Legacy sign-in links lead to `/auth/google/start`, and the old
+ChatGPT handoff callback is disabled in this mode. Existing sessions from that
+handoff no longer authenticate on the Google-enabled gateway.
+
+Configure the OAuth web client in Google Auth Platform with:
+
+- Authorized JavaScript origin: `https://ziyomakon.onrender.com`
+- Authorized redirect URI: `https://ziyomakon.onrender.com/auth/google/callback`
+- Application home: `https://ziyomakon.onrender.com/`
+- Privacy policy: `https://ziyomakon.onrender.com/privacy`
+- Basic identity only; no Gmail, Drive, Contacts or other API permissions.
+
+Only the public client ID is needed. No Google client secret or account password
+is configured in this application. The official Google library returns a signed
+ID token through POST. The gateway validates its signature against Google's
+rotating public keys, issuer, audience, expiry, verified email and session nonce.
+The GIS double-submit cookie is also required. The browser's signed login-state
+cookie is HttpOnly, Secure and SameSite=None so the Google redirect POST works.
+Callback responses never forward a referrer and credentials are never logged.
+
+Publish the backend migration before enabling the client ID. The Worker maps the
+stable Google subject through `google_accounts`. Existing profiles and bound
+administrator IDs are linked only for authoritative Gmail/Workspace emails and
+only when the previous account is unambiguous and unlinked. Scores, usernames,
+quiz runs and previous audit records keep their original user IDs. Existing
+third-party-email profiles require separate ownership verification, rather than
+being silently reassigned. Brand-new Google users choose a username normally.
+
+Without the client ID, the existing deployed login stays available while Google
+setup is incomplete. `/auth/google/start` explicitly reports that setup is still
+pending. Do not describe Google sign-in as active until the client ID is set and
+a real Google sign-in has been verified.
+
+Build the pinned JWT library ahead of deployment:
+
+```
+npm ci --prefix hosting --ignore-scripts
+node scripts/build-google-login.mjs
+node hosting/google-auth.test.mjs
+node tests/hosting-gateway.mjs
+```
+
+The committed verifier bundle and its MIT license keep Render's existing start
+and build commands working without runtime package installation.

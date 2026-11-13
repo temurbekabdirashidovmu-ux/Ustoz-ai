@@ -1,6 +1,7 @@
 import { verifyToken, hashBody, validIdentity } from './hosting-proof.mjs';
+import { resolveGoogleUserId } from './google-accounts.mjs';
 
-type HostingEnvironment = {HOSTING_PROXY_SECRET?: string; HOSTING_PUBLIC_ORIGIN?: string};
+type HostingEnvironment = {HOSTING_PROXY_SECRET?: string; HOSTING_PUBLIC_ORIGIN?: string; DB?: D1Database};
 export async function authenticateHostingRequest(request: Request, env: HostingEnvironment): Promise<Request | Response> {
   const proof = request.headers.get('x-ziyomakon-proof');
   if (!proof) return request;
@@ -14,7 +15,12 @@ export async function authenticateHostingRequest(request: Request, env: HostingE
   const headers = new Headers(request.headers);
   for(const name of Array.from(headers.keys())) if(name.startsWith('oai-authenticated-') || name.startsWith('x-ziyomakon-')) headers.delete(name);
   if(data.identity) {
-    headers.set('oai-authenticated-user-id', data.identity.userId);
+    let userId = data.identity.userId;
+    if(data.identity.provider === 'google') {
+      if(!env.DB) return forbidden();
+      try { userId = await resolveGoogleUserId(env.DB, data.identity); } catch { return forbidden(); }
+    }
+    headers.set('oai-authenticated-user-id', userId);
     headers.set('oai-authenticated-user-email', data.identity.email);
   }
   return new Request(request, {headers});

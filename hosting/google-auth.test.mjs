@@ -1,0 +1,55 @@
+import assert from 'node:assert/strict';
+import {generateKeyPair,exportJWK,SignJWT,createLocalJWKSet} from 'jose';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync,readdirSync} from 'node:fs';
+import {once} from 'node:events';
+import {verifyGoogleCredential,validGoogleClientId} from './google-auth-bundle.mjs';
+import {resolveGoogleUserId} from '../lib/google-accounts.mjs';
+import {signToken,verifyToken} from '../lib/hosting-proof.mjs';
+import {createGateway,cookies} from './server.mjs';
+
+const clientId='123-test.apps.googleusercontent.com',nonce='test-nonce-'.repeat(4);
+const {privateKey,publicKey}=await generateKeyPair('RS256');
+const jwk=await exportJWK(publicKey);jwk.kid='test-key';const keys=createLocalJWKSet({keys:[jwk]});
+async function token(overrides={}){return new SignJWT({email:'reader@gmail.com',email_verified:true,nonce,...overrides}).setProtectedHeader({alg:'RS256',kid:'test-key'}).setIssuer('https://accounts.google.com').setAudience(clientId).setSubject('test-subject').setIssuedAt().setExpirationTime('5m').sign(privateKey);}
+const valid=await token(), identity=await verifyGoogleCredential(valid,{clientId,nonce,keys});
+assert.equal(identity.provider,'google');assert.equal(identity.userId,'google:test-subject');assert.equal(identity.authoritative,true);assert(validGoogleClientId(clientId));assert(!validGoogleClientId('javascript:alert(1)'));
+await assert.rejects(verifyGoogleCredential(valid,{clientId:'124-other.apps.googleusercontent.com',nonce,keys}));
+await assert.rejects(verifyGoogleCredential(valid,{clientId,nonce:'wrong-nonce-'.repeat(4),keys}));
+await assert.rejects(verifyGoogleCredential(await token({email_verified:false}),{clientId,nonce,keys}));
+await assert.rejects(verifyGoogleCredential(valid.slice(0,-5)+'AAAAA',{clientId,nonce,keys}));
+const sql=new DatabaseSync(':memory:');
+for(const f of readdirSync(new URL('../drizzle/',import.meta.url)).filter(f=>f.endsWith('.sql')).sort())sql.exec(readFileSync(new URL('../drizzle/'+f,import.meta.url),'utf8'));
+const database={prepare(query){return{bind(...values){return{async first(){return sql.prepare(query).get(...values)||null;},async all(){return{results:sql.prepare(query).all(...values)};},async run(){return sql.prepare(query).run(...values);}};}};}};
+sql.prepare('INSERT INTO student_profiles VALUES (?,?,?,?,?)').run('legacy-reader','reader@gmail.com','reader_01','2026-01-01','2026-01-01');
+sql.prepare('INSERT INTO student_scores VALUES (?,?,?,?,?)').run('legacy-reader',90,3,'2026-01-01','2026-01-01');
+assert.equal(await resolveGoogleUserId(database,identity),'legacy-reader');
+assert.equal(sql.prepare('SELECT best_score FROM student_scores WHERE user_id=?').get('legacy-reader').best_score,90);
+assert.equal(await resolveGoogleUserId(database,{...identity,email:'renamed@gmail.com'}),'legacy-reader');
+await assert.rejects(resolveGoogleUserId(database,{...identity,subject:'other',userId:'google:other'}));
+sql.prepare('INSERT INTO student_profiles VALUES (?,?,?,?,?)').run('third-party','reader@example.invalid','thirdparty','2026-01-01','2026-01-01');
+await assert.rejects(resolveGoogleUserId(database,{...identity,subject:'third',userId:'google:third',email:'reader@example.invalid',authoritative:false}));
+sql.prepare('INSERT INTO admin_members VALUES (?,?,?,?,?,?,?)').run('admin@gmail.com','legacy-admin',1,'owner','2026-01-01','2026-01-01',null);
+assert.equal(await resolveGoogleUserId(database,{...identity,subject:'admin-sub',userId:'google:admin-sub',email:'admin@gmail.com'}),'legacy-admin');
+assert.equal(await resolveGoogleUserId(database,{...identity,subject:'new-sub',userId:'google:new-sub',email:'new@gmail.com'}),'google:new-sub');
+for(const id of ['duplicate1','duplicate2'])sql.prepare('INSERT INTO student_profiles VALUES (?,?,?,?,?)').run(id,'duplicate@gmail.com',id,'2026-01-01','2026-01-01');
+await assert.rejects(resolveGoogleUserId(database,{...identity,subject:'duplicate',userId:'google:duplicate',email:'duplicate@gmail.com'}));
+sql.close();
+const secret='test-only-'.repeat(8),origin='http://127.0.0.1:19488';let verificationCalls=0;
+const server=createGateway({upstream:'https://backend.invalid',publicOrigin:origin,secret,googleClientId:clientId,googleVerifier:async(value)=>{verificationCalls++;if(value!=='signed-test-credential')throw Error('Invalid');return identity;},fetcher:async()=>Response.json({profile:null})});
+server.listen(19488,'127.0.0.1');await once(server,'listening');
+try{
+ let r=await fetch(origin+'/kirish');assert.equal(r.status,200);const html=await r.text();assert(html.includes('accounts.google.com/gsi/client'));assert(!html.includes('ChatGPT'));assert(!html.includes('password'));
+ const rawCookie=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_google_pending='));assert(rawCookie.includes('HttpOnly'));assert(rawCookie.includes('SameSite=None'));
+ const pendingCookie=rawCookie.split(';')[0],pendingToken=pendingCookie.slice(pendingCookie.indexOf('=')+1);
+ assert(await verifyToken(secret,pendingToken,'google-pending',origin));
+ r=await fetch(origin+'/signin-with-chatgpt',{redirect:'manual'});assert.equal(r.status,303);assert(r.headers.get('location').startsWith('/auth/google/start'));
+ r=await fetch(origin+'/auth/callback?token=old',{redirect:'manual'});assert.equal(r.status,410);
+ const data=new URLSearchParams({credential:'signed-test-credential',g_csrf_token:'test-csrf-token-with-32-characters'});
+ r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie},redirect:'manual'});assert.equal(r.status,403);assert.equal(verificationCalls,0);
+ r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie+'; g_csrf_token=wrong'},redirect:'manual'});assert.equal(r.status,403);assert.equal(verificationCalls,0);
+ r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie+'; g_csrf_token='+data.get('g_csrf_token')},redirect:'manual'});assert.equal(r.status,303);assert.equal(r.headers.get('location'),'/profil');assert.equal(r.headers.get('referrer-policy'),'no-referrer');assert.equal(verificationCalls,1);
+ const issued=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];const value=issued.slice(issued.indexOf('=')+1);assert.equal((await verifyToken(secret,value,'session',origin)).identity.provider,'google');
+ r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,redirect:'manual'});assert.equal(r.status,403);
+ console.log('Google signature, audience, nonce, CSRF, Google-only login, legacy profiles, scores and administrator bindings passed. All identities are test-only.');
+}finally{server.close();server.closeAllConnections();}
