@@ -7,10 +7,12 @@ import {signToken, verifyToken, hashBody, validIdentity, safeReturnPath} from '.
 import {validGoogleClientId,verifyGoogleCredential,googleLoginPage,googlePrivacyPage} from './google-auth-bundle.mjs';
 import {legacyGoogleProfiles,googleGatewayIdentity} from './legacy-google-profiles.mjs';
 import {compactNavigationPage} from '../lib/navigation.mjs';
+import {createEmailLogin,createResendSender,emailLoginPage} from './email-login.mjs';
 
 const SESSION = '__Host-ziyo_render';
 const PENDING = '__Host-ziyo_pending';
 const GOOGLE_PENDING = '__Host-ziyo_google_pending';
+const EMAIL_PENDING = '__Host-ziyo_email_pending';
 const LIMIT = 27*1024*1024;
 const passHeaders = new Set(['accept','accept-language','content-type','range','if-range','if-none-match','if-modified-since','user-agent']);
 const passCookies = new Set(['ziyo_email','ziyo_login_user']);
@@ -23,11 +25,19 @@ export function cookie(name, value, age) {
 export function safeCookies(header) {
   return Object.entries(cookies(header)).filter(([k])=>passCookies.has(k)).map(([k,v])=>`${k}=${v}`).join('; ');
 }
-export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, googleClientId = '', googleVerifier = verifyGoogleCredential, legacyProfiles}) {
+export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, googleClientId = '', googleVerifier = verifyGoogleCredential, legacyProfiles,emailSender=null}) {
   const backend = new URL(upstream).origin;
   const origin = new URL(publicOrigin).origin;
   const googleEnabled=validGoogleClientId(googleClientId);
   const legacyMap=legacyGoogleProfiles(legacyProfiles);
+  const emailEnabled=typeof emailSender==='function';
+  if(emailEnabled&&!legacyMap)throw Error('Email login requires reviewed legacy profiles');
+  const emailLogin=emailEnabled?createEmailLogin({secret,send:emailSender}):null;
+  const loginPath=emailEnabled?'/auth/email':'/auth/google/start';
+  function backendIdentityFor(identity){
+    if(identity.provider==='email')return {...identity,provider:'email-gateway',userId:legacyMap.get(identity.email)||identity.userId};
+    return legacyMap?googleGatewayIdentity(identity,legacyMap):identity;
+  }
   if(googleClientId && !googleEnabled)throw new Error('GOOGLE_CLIENT_ID is invalid');
   if(secret.length<43) throw new Error('HOSTING_PROXY_SECRET is required');
   async function handle(req, res) {
@@ -41,10 +51,42 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     const url = new URL(req.url,origin);
     if(url.origin !== origin) return send(400,'Noto‘g‘ri so‘rov.');
     const jar = cookies(req.headers.cookie);
-    if(url.pathname === '/privacy' && req.method === 'GET')return send(200,googlePrivacyPage(),{'Content-Type':'text/html; charset=utf-8'});
-    if(googleEnabled && (url.pathname === '/signin-with-chatgpt' || url.pathname === '/kirish' && req.method === 'POST')) {
+    if(url.pathname==='/auth/email'||url.pathname==='/auth/email/send'||url.pathname==='/auth/email/verify') {
+      const authHeaders={'Content-Type':'text/html; charset=utf-8','Referrer-Policy':'strict-origin-when-cross-origin','X-Robots-Tag':'noindex,nofollow'};
+      const returnTo=safeReturnPath(url.searchParams.get('return_to')||'/profil');
+      const show=(status,options={})=>send(status,emailLoginPage({configured:emailEnabled,googleEnabled,returnTo,...options}),authHeaders);
+      if(!emailEnabled)return show(503);
+      if(req.method==='GET'&&url.pathname==='/auth/email')return show(200);
+      if(req.method!=='POST')return show(405,{error:'Kirish sahifasidan davom eting.'});
+      if(req.headers.origin!==origin)return send(403,'So‘rovni sayt ichidan yuboring.');
+      let size=0;const chunks=[];
+      for await(const chunk of req){size+=chunk.length;if(size>3000)return show(413,{error:'So‘rov juda katta.'});chunks.push(chunk);}
+      const form=new URLSearchParams(Buffer.concat(chunks).toString());
+      if(url.pathname==='/auth/email/send') {
+        try {
+          const pending=await emailLogin.begin(form.get('email'),form.get('return_to'));
+          authHeaders['Set-Cookie']=cookie(EMAIL_PENDING,pending.id,300);
+          return show(200,{email:pending.email,returnTo:safeReturnPath(form.get('return_to'))});
+        }catch(error){return show(error.status||503,{error:error.message,returnTo:safeReturnPath(form.get('return_to'))});}
+      }
+      if(url.pathname!=='/auth/email/verify')return show(405);
+      let verified;
+      try{verified=emailLogin.verify(jar[EMAIL_PENDING],form.get('code'));}
+      catch(error){const pending=emailLogin.inspect(jar[EMAIL_PENDING]);return show(error.status||403,{error:error.message,...(pending||{})});}
+      const identity=verified.identity,now=Date.now(),backendIdentity=backendIdentityFor(identity);
+      const proof=await signToken(secret,{purpose:'request',aud:backend,origin,iat:now,exp:now+45000,method:'GET',path:'/api/profile',body:await hashBody(new Uint8Array()),identity:backendIdentity});
+      const forwarded={'x-ziyomakon-proof':proof};if(typeof req.headers['user-agent']==='string')forwarded['user-agent']=req.headers['user-agent'];
+      let profile;try{profile=await fetcher(backend+'/api/profile',{headers:forwarded,redirect:'manual',signal:AbortSignal.timeout(20000)});}catch{}
+      authHeaders['Set-Cookie']=cookie(EMAIL_PENDING,'',0);
+      if(profile?.status!==200)return show(503,{error:'Profil ochilmadi. Yangi kod so‘rab, qayta urinib ko‘ring.'});
+      const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+86400000,identity,returnTo:verified.returnTo});
+      return redirect(verified.returnTo,{...authHeaders,'Set-Cookie':[cookie(SESSION,token,86400),cookie(EMAIL_PENDING,'',0),cookie(GOOGLE_PENDING,'',0),cookie(PENDING,'',0),cookie('ziyo_email','',0),cookie('ziyo_login_user','',0)]});
+    }
+    if(url.pathname === '/privacy' && req.method === 'GET')return send(200,googlePrivacyPage().replace('</body>',(emailEnabled?'<h2>Gmail kodi bilan kirish</h2><p>Kirish kodini yuborish uchun Gmail manzilingiz va bir martalik kod Resend xat yuborish xizmatiga uzatiladi. Kod 5 daqiqa amal qiladi va bir marta ishlatiladi. Server kodning tekshiruv xeshini vaqtincha saqlaydi. Google parolingiz so‘ralmaydi.</p>':'')+'</body>'),{'Content-Type':'text/html; charset=utf-8'});
+    if(emailEnabled&&url.pathname==='/kirish'&&req.method==='GET')return redirect('/auth/email?return_to='+encodeURIComponent(safeReturnPath(url.searchParams.get('return_to')||'/profil')));
+    if((googleEnabled||emailEnabled) && (url.pathname === '/signin-with-chatgpt' || url.pathname === '/kirish' && req.method === 'POST')) {
       if(req.method==='POST' && req.headers.origin!==origin)return send(403,'So‘rovni sayt ichidan yuboring.');
-      return redirect('/auth/google/start?return_to='+encodeURIComponent(safeReturnPath(url.searchParams.get('return_to')||'/profil')),{'Referrer-Policy':'no-referrer'});
+      return redirect(loginPath+'?return_to='+encodeURIComponent(safeReturnPath(url.searchParams.get('return_to')||'/profil')),{'Referrer-Policy':'no-referrer'});
     }
     if((googleEnabled && url.pathname==='/kirish' || url.pathname==='/auth/google/start') && req.method==='GET') {
       const nonce=randomBytes(32).toString('base64url'),now=Date.now();
@@ -84,7 +126,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
       const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+86400000,identity,returnTo:safeReturnPath(pending.returnTo)});
       return redirect(safeReturnPath(pending.returnTo),{...authHeaders,'Set-Cookie':[cookie(SESSION,token,86400),cookie(GOOGLE_PENDING,'',0),cookie(PENDING,'',0)]});
     }
-    if(googleEnabled && url.pathname==='/auth/callback')return send(410,'Bu kirish usuli almashtirilgan. Google orqali kiring.',{'Referrer-Policy':'no-referrer'});
+    if((googleEnabled||emailEnabled) && url.pathname==='/auth/callback')return send(410,'Bu kirish usuli almashtirilgan. Saytdagi kirish sahifasini oching.',{'Referrer-Policy':'no-referrer'});
     if(url.pathname === '/signin-with-chatgpt') {
       const state = randomBytes(32).toString('base64url');
       const returnTo = safeReturnPath(url.searchParams.get('return_to') || '/');
@@ -98,7 +140,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
       const token=await signToken(secret,{purpose:'session',aud:origin,iat:now,exp:now+24*60*60*1000,identity:data.identity});
       return redirect(safeReturnPath(data.returnTo),{'Set-Cookie':[cookie(SESSION,token,86400),cookie(PENDING,'',0)],'X-Robots-Tag':'noindex,nofollow','Referrer-Policy':'no-referrer'});
     }
-    if(url.pathname === '/signout-with-chatgpt' || url.pathname === '/auth/logout') return redirect(safeReturnPath(url.searchParams.get('return_to')||'/'),{'Set-Cookie':[cookie(SESSION,'',0),cookie(PENDING,'',0),cookie(GOOGLE_PENDING,'',0),cookie('ziyo_email','',0),cookie('ziyo_login_user','',0)]});
+    if(url.pathname === '/signout-with-chatgpt' || url.pathname === '/auth/logout') return redirect(safeReturnPath(url.searchParams.get('return_to')||'/'),{'Set-Cookie':[cookie(SESSION,'',0),cookie(PENDING,'',0),cookie(GOOGLE_PENDING,'',0),cookie(EMAIL_PENDING,'',0),cookie('ziyo_email','',0),cookie('ziyo_login_user','',0)]});
     if(url.pathname.startsWith('/hosting/') || url.pathname.startsWith('/auth/')) return send(404,'Topilmadi.');
     const unsafe = !['GET','HEAD','OPTIONS'].includes(req.method);
     if(unsafe && req.headers.origin !== origin) return send(403,'So‘rovni sayt ichidan yuboring.');
@@ -107,9 +149,9 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     for await(const chunk of req) {length+=chunk.length;if(length>LIMIT)return send(413,'Fayl juda katta.');chunks.push(chunk);}
     const body=Buffer.concat(chunks);
     const session=await verifyToken(secret,jar[SESSION],'session',origin);
-    const sessionIdentity=session&&validIdentity(session.identity)&&(!googleEnabled||session.identity.provider==='google')?session.identity:null;
-    const identity=sessionIdentity&&googleEnabled&&legacyMap?googleGatewayIdentity(sessionIdentity,legacyMap):sessionIdentity;
-    if(googleEnabled && !identity && url.pathname==='/' && url.searchParams.get('bolim')==='teacher')return redirect('/auth/google/start?return_to='+encodeURIComponent(url.pathname+url.search));
+    const sessionIdentity=session&&validIdentity(session.identity)&&(!(googleEnabled||emailEnabled)||googleEnabled&&session.identity.provider==='google'||emailEnabled&&session.identity.provider==='email')?session.identity:null;
+    const identity=sessionIdentity&&(googleEnabled||emailEnabled)&&legacyMap?backendIdentityFor(sessionIdentity):sessionIdentity;
+    if((googleEnabled||emailEnabled) && !identity && url.pathname==='/' && url.searchParams.get('bolim')==='teacher')return redirect(loginPath+'?return_to='+encodeURIComponent(url.pathname+url.search));
     const forwarded=new Headers();
     for(const [name,value] of Object.entries(req.headers)) if(passHeaders.has(name)&&typeof value==='string')forwarded.set(name,value);
     const kept=safeCookies(req.headers.cookie);if(kept)forwarded.set('cookie',kept);
@@ -127,9 +169,9 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     const type=out.get('content-type')||'';
     let text;
     if(/text\/|application\/(?:json|javascript|xml)|image\/svg\+xml/.test(type))text=(await response.text()).replaceAll(backend,origin);
-    if(googleEnabled && text!==undefined && type.includes('text/html'))text=text.replaceAll('/signin-with-chatgpt','/auth/google/start').replaceAll('/signout-with-chatgpt','/auth/logout').replaceAll('ChatGPT hisobingiz','Google hisobingiz').replaceAll('ChatGPT hisobi','Google hisobi').replaceAll('ChatGPT hisobing','Google hisobing').replaceAll('ChatGPT orqali kirish','Google orqali kirish');
+    if((googleEnabled||emailEnabled) && text!==undefined && type.includes('text/html'))text=text.replaceAll('/signin-with-chatgpt',loginPath).replaceAll('/signout-with-chatgpt','/auth/logout').replaceAll('ChatGPT hisobingiz',emailEnabled?'Gmail manzilingiz':'Google hisobingiz').replaceAll('ChatGPT hisobi',emailEnabled?'Gmail manzili':'Google hisobi').replaceAll('ChatGPT hisobing',emailEnabled?'Gmail manziling':'Google hisobing').replaceAll('ChatGPT orqali kirish',emailEnabled?'Gmail kodi bilan kirish':'Google orqali kirish');
     if(text!==undefined && type.includes('text/html'))text=compactNavigationPage(text,url.pathname);
-    if(googleEnabled && identity && url.pathname==='/profil' && text?.includes('id="profileForm"') && session.returnTo && session.returnTo!=='/profil') {
+    if((googleEnabled||emailEnabled) && identity && url.pathname==='/profil' && text?.includes('id="profileForm"') && session.returnTo && session.returnTo!=='/profil') {
       const returnTo=safeReturnPath(session.returnTo);
       text=text.replace("location.href='/';",'location.href='+JSON.stringify(returnTo).replaceAll('<','\\u003c')+';');
     }
@@ -145,7 +187,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
 if(process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const publicOrigin=process.env.PUBLIC_ORIGIN||process.env.RENDER_EXTERNAL_URL;
   if(!publicOrigin||!process.env.UPSTREAM_ORIGIN||!process.env.HOSTING_PROXY_SECRET)throw new Error('Missing hosting configuration');
-  const server=createGateway({upstream:process.env.UPSTREAM_ORIGIN,publicOrigin,secret:process.env.HOSTING_PROXY_SECRET,googleClientId:process.env.GOOGLE_CLIENT_ID||'',legacyProfiles:process.env.GOOGLE_LEGACY_PROFILES});
+  const server=createGateway({upstream:process.env.UPSTREAM_ORIGIN,publicOrigin,secret:process.env.HOSTING_PROXY_SECRET,googleClientId:process.env.GOOGLE_CLIENT_ID||'',legacyProfiles:process.env.GOOGLE_LEGACY_PROFILES,emailSender:createResendSender({apiKey:process.env.RESEND_API_KEY,from:process.env.EMAIL_FROM})});
   server.listen(Number(process.env.PORT||10000),'0.0.0.0',()=>console.log('ZIYOMAKON server is ready.'));
   const close=()=>{server.close(()=>process.exit(0));setTimeout(()=>process.exit(1),25000).unref();};
   process.on('SIGTERM',close);process.on('SIGINT',close);

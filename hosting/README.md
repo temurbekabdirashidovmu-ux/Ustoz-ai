@@ -88,6 +88,36 @@ setup is incomplete. `/auth/google/start` explicitly reports that setup is still
 pending. Do not describe Google sign-in as active until the client ID is set and
 a real Google sign-in has been verified.
 
+## Gmail one-time codes
+
+An alternative email-code flow is available only after both `RESEND_API_KEY`
+and `EMAIL_FROM` are configured in Render's secret environment settings. The
+sender must be authorized by Resend; production sending requires the provider's
+domain verification. Do not paste either value into chat or commit credentials.
+`GOOGLE_LEGACY_PROFILES` must contain the reviewed Gmail profile snapshot.
+
+Until then, `/auth/email` reports that mail delivery is unconfigured, and the
+existing Google login remains the default. Configuring the sender makes
+`/kirish` lead to the Gmail-code form; Google remains available separately.
+
+Codes expire in five minutes, are bound to a Secure/HttpOnly browser cookie,
+are accepted once, and allow at most five guesses. Only HMAC digests are kept
+in transient server memory. A restart invalidates pending codes. Requests need
+a matching Origin, have small body limits, and are limited to one send per
+minute, three per address per fifteen minutes, and fifty per server per hour.
+This flow assumes the current single-instance service. Scale-out requires a
+shared atomic challenge and rate-limit store before enabling multiple instances.
+
+Delivery is reported as accepted only after Resend returns a success ID. A
+provider error never signs in a user or claims an email was delivered. Existing
+reviewed Gmail profiles retain their user IDs; new email users receive
+`email:<address>` IDs. The privacy page describes the email delivery provider.
+This signs into ZIYOMAKON, not the Google Account itself.
+
+Validate with `node hosting/email-login.test.mjs`. Tests use a fake sender and
+never send a real email. A real delivery/verification test is still required
+after sender configuration.
+
 Build the pinned JWT library ahead of deployment:
 
 ```
