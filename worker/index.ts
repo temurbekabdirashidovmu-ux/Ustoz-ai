@@ -3,6 +3,7 @@ import { runWithConnectorBinding } from "../lib/connector-context";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 import { authenticateHostingRequest } from "../lib/hosting-proxy";
 
+import { protectAdminRequest, filterAdminLinks } from "../lib/admin-visibility";
 import { guardAccount } from "../lib/account-monitor";
 
 const worker = {
@@ -12,6 +13,8 @@ const worker = {
     request = verified;
     const blocked = await guardAccount(request);
     if (blocked) return blocked;
+    const denied = await protectAdminRequest(request);
+    if (denied) return denied;
     let binding = ctx.props?.CONNECTORS;
     // Local preview emulates the same request-scoped capability. This branch and
     // the auxiliary service binding are absent from production builds.
@@ -31,7 +34,8 @@ const worker = {
         },
       };
     }
-    return runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
+    const response = await runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
+    return filterAdminLinks(request, response);
   },
 };
 
