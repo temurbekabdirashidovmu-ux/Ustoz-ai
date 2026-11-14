@@ -3,11 +3,15 @@ import { runWithConnectorBinding } from "../lib/connector-context";
 import type { ConnectorBinding } from "../lib/connector-contract.mjs";
 import { authenticateHostingRequest } from "../lib/hosting-proxy";
 
+import { guardAccount } from "../lib/account-monitor";
+
 const worker = {
   async fetch(request: Request, env: Cloudflare.Env, ctx: ExecutionContext<{ CONNECTORS?: ConnectorBinding }>) {
     const verified = await authenticateHostingRequest(request, env as unknown as {HOSTING_PROXY_SECRET?:string; HOSTING_PUBLIC_ORIGIN?:string});
     if (verified instanceof Response) return verified;
     request = verified;
+    const blocked = await guardAccount(request);
+    if (blocked) return blocked;
     let binding = ctx.props?.CONNECTORS;
     // Local preview emulates the same request-scoped capability. This branch and
     // the auxiliary service binding are absent from production builds.

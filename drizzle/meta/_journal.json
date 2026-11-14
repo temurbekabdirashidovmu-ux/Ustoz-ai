@@ -43,6 +43,13 @@
       "when": 1794582882725,
       "tag": "0005_nifty_shinko_yamashiro",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1794641205714,
+      "tag": "0006_violet_karen_page",
+      "breakpoints": true
     }
   ]
 }

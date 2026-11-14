@@ -1,0 +1,2 @@
+import {isAdmin} from '../../../../lib/admin-auth';import {json} from '../../../../lib/service';import {accountList} from '../../../../lib/account-monitor';
+export async function GET(req:Request){if(!await isAdmin(req))return json({error:'Ruxsat yo‘q.'},403);const u=new URL(req.url),page=Math.min(10000,Math.max(1,Math.floor(Number(u.searchParams.get('page')))||1)),q=(u.searchParams.get('q')||'').slice(0,254);return json({accounts:await accountList(q,page),page});}
