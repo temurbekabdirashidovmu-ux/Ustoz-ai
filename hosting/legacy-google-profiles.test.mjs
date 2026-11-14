@@ -14,7 +14,7 @@ assert.throws(()=>legacyGoogleProfiles([{...records[0],email:'reader@example.inv
 assert.throws(()=>googleGatewayIdentity({...identity,authoritative:false},profiles));
 assert.throws(()=>googleGatewayIdentity({...identity,userId:'legacy-reader'},profiles));
 const secret='test-only-'.repeat(8),origin='http://127.0.0.1:19489';let forwarded=[];
-const server=createGateway({upstream:'https://backend.invalid',publicOrigin:origin,secret,googleClientId:'123-test.apps.googleusercontent.com',legacyProfiles:records,googleVerifier:async()=>identity,fetcher:async(url,options)=>{
+const server=createGateway({upstream:'https://backend.invalid',publicOrigin:origin,secret,googleClientId:'123-test.apps.googleusercontent.com',legacyProfiles:records,emailSender:async()=>{throw Error('Google entry must not send email');},googleVerifier:async()=>identity,fetcher:async(url,options)=>{
   assert(!url.endsWith('/api/health'));
   const value=options.headers instanceof Headers?options.headers.get('x-ziyomakon-proof'):options.headers['x-ziyomakon-proof'];
   const proof=await verifyToken(secret,value,'request','https://backend.invalid');
@@ -24,10 +24,10 @@ const server=createGateway({upstream:'https://backend.invalid',publicOrigin:orig
 }});
 server.listen(19489,'127.0.0.1');await once(server,'listening');
 try {
-  let r=await fetch(origin+'/kirish');const pending=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_google_pending=')).split(';')[0];
+  let r=await fetch(origin+'/kirish');assert.equal(r.status,200);assert((await r.text()).includes('accounts.google.com/gsi/client'));const pending=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_google_pending=')).split(';')[0];
   const csrf='test-csrf-token-with-32-characters';
   r=await fetch(origin+'/auth/google/callback',{method:'POST',body:new URLSearchParams({credential:'test-only',g_csrf_token:csrf}),headers:{Cookie:pending+'; g_csrf_token='+csrf},redirect:'manual'});
-  assert.equal(r.status,303);const session=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];
+  assert.equal(r.status,303);assert.equal(r.headers.get('location'),'/');const session=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];
   r=await fetch(origin+'/api/profile',{headers:{Cookie:session,'oai-authenticated-user-id':'attacker'}});assert.equal(r.status,200);assert.equal((await r.json()).profile.username,'reader_01');assert.equal(forwarded.length,2);
   const returnTo='/?bolim=teacher';r=await fetch(origin+'/kirish?return_to='+encodeURIComponent(returnTo));const nextPending=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_google_pending=')).split(';')[0];
   r=await fetch(origin+'/auth/google/callback',{method:'POST',body:new URLSearchParams({credential:'test-only',g_csrf_token:csrf}),headers:{Cookie:nextPending+'; g_csrf_token='+csrf},redirect:'manual'});assert.equal(r.status,303);assert.equal(r.headers.get('location'),returnTo);const nextSession=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];

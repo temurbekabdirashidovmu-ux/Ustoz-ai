@@ -33,7 +33,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
   const emailEnabled=typeof emailSender==='function';
   if(emailEnabled&&!legacyMap)throw Error('Email login requires reviewed legacy profiles');
   const emailLogin=emailEnabled?createEmailLogin({secret,send:emailSender}):null;
-  const loginPath=emailEnabled?'/auth/email':'/auth/google/start';
+  const loginPath=googleEnabled?'/auth/google/start':'/auth/email';
   function backendIdentityFor(identity){
     if(identity.provider==='email')return {...identity,provider:'email-gateway',userId:legacyMap.get(identity.email)||identity.userId};
     return legacyMap?googleGatewayIdentity(identity,legacyMap):identity;
@@ -53,7 +53,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     const jar = cookies(req.headers.cookie);
     if(url.pathname==='/auth/email'||url.pathname==='/auth/email/send'||url.pathname==='/auth/email/verify') {
       const authHeaders={'Content-Type':'text/html; charset=utf-8','Referrer-Policy':'strict-origin-when-cross-origin','X-Robots-Tag':'noindex,nofollow'};
-      const returnTo=safeReturnPath(url.searchParams.get('return_to')||'/profil');
+      const returnTo=safeReturnPath(url.searchParams.get('return_to')||'/');
       const show=(status,options={})=>send(status,emailLoginPage({configured:emailEnabled,googleEnabled,returnTo,...options}),authHeaders);
       if(!emailEnabled)return show(503);
       if(req.method==='GET'&&url.pathname==='/auth/email')return show(200);
@@ -83,14 +83,14 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
       return redirect(verified.returnTo,{...authHeaders,'Set-Cookie':[cookie(SESSION,token,86400),cookie(EMAIL_PENDING,'',0),cookie(GOOGLE_PENDING,'',0),cookie(PENDING,'',0),cookie('ziyo_email','',0),cookie('ziyo_login_user','',0)]});
     }
     if(url.pathname === '/privacy' && req.method === 'GET')return send(200,googlePrivacyPage().replace('</body>',(emailEnabled?'<h2>Gmail kodi bilan kirish</h2><p>Kirish kodini yuborish uchun Gmail manzilingiz va bir martalik kod Resend xat yuborish xizmatiga uzatiladi. Kod 5 daqiqa amal qiladi va bir marta ishlatiladi. Server kodning tekshiruv xeshini vaqtincha saqlaydi. Google parolingiz so‘ralmaydi.</p>':'')+'</body>'),{'Content-Type':'text/html; charset=utf-8'});
-    if(emailEnabled&&url.pathname==='/kirish'&&req.method==='GET')return redirect('/auth/email?return_to='+encodeURIComponent(safeReturnPath(url.searchParams.get('return_to')||'/profil')));
+    if(emailEnabled&&!googleEnabled&&url.pathname==='/kirish'&&req.method==='GET')return redirect('/auth/email?return_to='+encodeURIComponent(safeReturnPath(url.searchParams.get('return_to')||'/')));
     if((googleEnabled||emailEnabled) && (url.pathname === '/signin-with-chatgpt' || url.pathname === '/kirish' && req.method === 'POST')) {
       if(req.method==='POST' && req.headers.origin!==origin)return send(403,'So‘rovni sayt ichidan yuboring.');
-      return redirect(loginPath+'?return_to='+encodeURIComponent(safeReturnPath(url.searchParams.get('return_to')||'/profil')),{'Referrer-Policy':'no-referrer'});
+      return redirect(loginPath+'?return_to='+encodeURIComponent(safeReturnPath(url.searchParams.get('return_to')||'/')),{'Referrer-Policy':'no-referrer'});
     }
     if((googleEnabled && url.pathname==='/kirish' || url.pathname==='/auth/google/start') && req.method==='GET') {
       const nonce=randomBytes(32).toString('base64url'),now=Date.now();
-      const pending=await signToken(secret,{purpose:'google-pending',aud:origin,iat:now,exp:now+600000,nonce,returnTo:safeReturnPath(url.searchParams.get('return_to')||'/profil')});
+      const pending=await signToken(secret,{purpose:'google-pending',aud:origin,iat:now,exp:now+600000,nonce,returnTo:safeReturnPath(url.searchParams.get('return_to')||'/')});
       return send(googleEnabled?200:503,googleLoginPage({clientId:googleEnabled?googleClientId:'',nonce,origin}),{
         'Content-Type':'text/html; charset=utf-8','Cross-Origin-Opener-Policy':'same-origin-allow-popups','X-Robots-Tag':'noindex,nofollow',
         'Set-Cookie':[cookie(GOOGLE_PENDING,pending,600).replace('SameSite=Lax','SameSite=None'),cookie('ziyo_email','',0),cookie('ziyo_login_user','',0)]
@@ -169,7 +169,7 @@ export function createGateway({upstream, publicOrigin, secret, fetcher = fetch, 
     const type=out.get('content-type')||'';
     let text;
     if(/text\/|application\/(?:json|javascript|xml)|image\/svg\+xml/.test(type))text=(await response.text()).replaceAll(backend,origin);
-    if((googleEnabled||emailEnabled) && text!==undefined && type.includes('text/html'))text=text.replaceAll('/signin-with-chatgpt',loginPath).replaceAll('/signout-with-chatgpt','/auth/logout').replaceAll('ChatGPT hisobingiz',emailEnabled?'Gmail manzilingiz':'Google hisobingiz').replaceAll('ChatGPT hisobi',emailEnabled?'Gmail manzili':'Google hisobi').replaceAll('ChatGPT hisobing',emailEnabled?'Gmail manziling':'Google hisobing').replaceAll('ChatGPT orqali kirish',emailEnabled?'Gmail kodi bilan kirish':'Google orqali kirish');
+    if((googleEnabled||emailEnabled) && text!==undefined && type.includes('text/html'))text=text.replaceAll('/signin-with-chatgpt',loginPath).replaceAll('/signout-with-chatgpt','/auth/logout').replaceAll('ChatGPT hisobingiz',googleEnabled?'Google hisobingiz':'Gmail manzilingiz').replaceAll('ChatGPT hisobi',googleEnabled?'Google hisobi':'Gmail manzili').replaceAll('ChatGPT hisobing',googleEnabled?'Google hisobing':'Gmail manziling').replaceAll('ChatGPT orqali kirish',googleEnabled?'Google orqali kirish':'Gmail kodi bilan kirish');
     if(text!==undefined && type.includes('text/html'))text=compactNavigationPage(text,url.pathname);
     if((googleEnabled||emailEnabled) && identity && url.pathname==='/profil' && text?.includes('id="profileForm"') && session.returnTo && session.returnTo!=='/profil') {
       const returnTo=safeReturnPath(session.returnTo);

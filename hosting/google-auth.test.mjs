@@ -49,7 +49,7 @@ try{
  const data=new URLSearchParams({credential:'signed-test-credential',g_csrf_token:'test-csrf-token-with-32-characters'});
  r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie},redirect:'manual'});assert.equal(r.status,403);assert.equal(verificationCalls,0);
  r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie+'; g_csrf_token=wrong'},redirect:'manual'});assert.equal(r.status,403);assert.equal(verificationCalls,0);
- r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie+'; g_csrf_token='+data.get('g_csrf_token')},redirect:'manual'});assert.equal(r.status,303);assert.equal(r.headers.get('location'),'/profil');assert.equal(r.headers.get('referrer-policy'),'no-referrer');assert.equal(verificationCalls,1);
+ r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie+'; g_csrf_token='+data.get('g_csrf_token')},redirect:'manual'});assert.equal(r.status,303);assert.equal(r.headers.get('location'),'/');assert.equal(r.headers.get('referrer-policy'),'no-referrer');assert.equal(verificationCalls,1);
  const issued=r.headers.getSetCookie().find(c=>c.startsWith('__Host-ziyo_render=')).split(';')[0];const value=issued.slice(issued.indexOf('=')+1);assert.equal((await verifyToken(secret,value,'session',origin)).identity.provider,'google');
  backendReady=false;
  r=await fetch(origin+'/auth/google/callback',{method:'POST',body:data,headers:{Cookie:pendingCookie+'; g_csrf_token='+data.get('g_csrf_token')},redirect:'manual'});assert.equal(r.status,503);assert(!r.headers.getSetCookie().some(c=>c.startsWith('__Host-ziyo_render=')));

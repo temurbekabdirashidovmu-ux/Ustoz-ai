@@ -97,8 +97,10 @@ domain verification. Do not paste either value into chat or commit credentials.
 `GOOGLE_LEGACY_PROFILES` must contain the reviewed Gmail profile snapshot.
 
 Until then, `/auth/email` reports that mail delivery is unconfigured, and the
-existing Google login remains the default. Configuring the sender makes
-`/kirish` lead to the Gmail-code form; Google remains available separately.
+existing Google login remains the default. When Google and email are both
+configured, `/kirish` continues to show Google sign-in; `/auth/email` remains
+available separately. A normal login returns to the original home page.
+Explicit `return_to` paths, including profile and tutor links, are preserved.
 
 Codes expire in five minutes, are bound to a Secure/HttpOnly browser cookie,
 are accepted once, and allow at most five guesses. Only HMAC digests are kept
