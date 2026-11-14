@@ -50,6 +50,13 @@
       "when": 1794641205714,
       "tag": "0006_violet_karen_page",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1794641739074,
+      "tag": "0007_public_caretaker",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import {sqliteTable, text, integer} from "drizzle-orm/sqlite-core";
+import {sqliteTable, text, integer, primaryKey, index} from "drizzle-orm/sqlite-core";
 export const settings=sqliteTable("site_settings",{id:text("id").primaryKey(),value:text("value").notNull()});
 export const usage=sqliteTable("daily_usage",{day:text("day").primaryKey(),count:integer("count").notNull().default(0)});
 export const books=sqliteTable('books',{
@@ -25,3 +25,6 @@ export const googleAccounts=sqliteTable('google_accounts',{subject:text('subject
 
 export const accountActivity=sqliteTable('account_activity',{userId:text('user_id').primaryKey(),email:text('email').notNull(),firstSeenAt:text('first_seen_at').notNull(),lastSeenAt:text('last_seen_at').notNull(),blocked:integer('blocked').notNull().default(0),blockReason:text('block_reason'),blockedBy:text('blocked_by'),blockedAt:text('blocked_at')});
 export const integrityEvents=sqliteTable('integrity_events',{id:text('id').primaryKey(),userId:text('user_id').notNull(),runId:text('run_id').notNull(),eventType:text('event_type').notNull(),createdAt:text('created_at').notNull()});
+
+export const localProgress=sqliteTable('local_progress',{userId:text('user_id').primaryKey(),localName:text('local_name').notNull(),games:integer('games').notNull(),bestPercent:integer('best_percent').notNull(),coins:integer('coins').notNull(),lessons:integer('lessons').notNull(),updatedAt:text('updated_at').notNull()});
+export const localGameResults=sqliteTable('local_game_results',{id:text('id').notNull(),userId:text('user_id').notNull(),title:text('title').notNull(),correct:integer('correct').notNull(),total:integer('total').notNull(),coins:integer('coins').notNull(),deviceTime:text('device_time').notNull(),receivedAt:text('received_at').notNull()},t=>[primaryKey({columns:[t.userId,t.id]}),index('local_game_user_time').on(t.userId,t.receivedAt)]);
